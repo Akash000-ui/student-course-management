@@ -1,17 +1,30 @@
 package com.student.studentcoursemanagement.service;
 
+import com.student.studentcoursemanagement.controller.AuthController;
 import com.student.studentcoursemanagement.dto.ApiResponse;
 import com.student.studentcoursemanagement.dto.AuthResponse;
+import com.student.studentcoursemanagement.dto.GoogleAuthRequest;
 import com.student.studentcoursemanagement.dto.LoginRequestDTO;
 import com.student.studentcoursemanagement.dto.RegisterRequestDTO;
 import com.student.studentcoursemanagement.dto.UserResponse;
+import com.student.studentcoursemanagement.model.AuthProvider;
 import com.student.studentcoursemanagement.model.User;
 import com.student.studentcoursemanagement.model.UserRole;
 import com.student.studentcoursemanagement.repo.UserRepo;
 import com.student.studentcoursemanagement.util.JwtUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
+import java.util.Collections;
+import java.util.Optional;
 
 @Service
 public class AuthService {
@@ -24,6 +37,12 @@ public class AuthService {
 
     @Autowired
     private UserRepo userRepository;
+
+    @Value("${google.clientId:}")
+    private String googleClientId;
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
+
 
     public ApiResponse<AuthResponse> register(RegisterRequestDTO request){
 
@@ -78,7 +97,16 @@ public class AuthService {
             return response;
         }
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+        logger("Login attempt for user: {}", user);
+
+        // If the account is a Google account, require Google sign-in
+        if (user.getAuthProvider() == AuthProvider.GOOGLE) {
+            ApiResponse<AuthResponse> response = new ApiResponse<>(false, "This account uses Google sign-in. Please sign in with Google.", null);
+            response.setStatusCode(409);
+            return response;
+        }
+
+        if (user.getPassword() == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             ApiResponse<AuthResponse> response = new ApiResponse<>(false, "Invalid credentials", null);
             response.setStatusCode(401);
             return response;
@@ -96,9 +124,15 @@ public class AuthService {
             return response;
         }
 
+
+
         ApiResponse<AuthResponse> response = new ApiResponse<>(true, "Login successful", authResponse);
         response.setStatusCode(200);
         return response;
+    }
+
+    private void logger(String s, User user) {
+        logger.info(s, user.getRoles());
     }
 
     public ApiResponse<String> deleteAccount(String userId) {
@@ -145,5 +179,78 @@ public class AuthService {
         ApiResponse<String> response = new ApiResponse<>(true, "Admin role added successfully", null);
         response.setStatusCode(200);
         return response;
+    }
+
+    public ApiResponse<AuthResponse> googleLogin(GoogleAuthRequest request) {
+        // Verify the ID token with Google
+        try {
+            String expectedClientId = Optional.ofNullable(request.getClientId()).filter(s -> !s.isBlank()).orElse(googleClientId);
+            if (expectedClientId == null || expectedClientId.isBlank()) {
+                ApiResponse<AuthResponse> response = new ApiResponse<>(false, "Google clientId not configured", null);
+                response.setStatusCode(500);
+                return response;
+            }
+
+            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), GsonFactory.getDefaultInstance())
+                    .setAudience(Collections.singletonList(expectedClientId))
+                    .build();
+
+            GoogleIdToken idToken = verifier.verify(request.getIdToken());
+            if (idToken == null) {
+                ApiResponse<AuthResponse> response = new ApiResponse<>(false, "Invalid Google ID token", null);
+                response.setStatusCode(401);
+                return response;
+            }
+
+            GoogleIdToken.Payload payload = idToken.getPayload();
+            String email = payload.getEmail();
+            String name = Optional.ofNullable((String) payload.get("name")).orElse(email);
+
+            User user = userRepository.findByEmail(email);
+            if (user == null) {
+                // Create new user as GOOGLE provider
+                user = User.builder()
+                        .email(email)
+                        .username(name)
+                        .verified(true)
+                        .authProvider(AuthProvider.GOOGLE)
+                        .createdAt(java.time.LocalDateTime.now())
+                        .updatedAt(java.time.LocalDateTime.now())
+                        .build();
+                user.getRoles().add(UserRole.USER);
+            } else {
+                // If existing LOCAL account, block sign-in via Google to avoid account takeover
+                if (user.getAuthProvider() == AuthProvider.LOCAL) {
+                    ApiResponse<AuthResponse> response = new ApiResponse<>(false, "Account registered with email/password. Please sign in with password.", null);
+                    response.setStatusCode(409);
+                    return response;
+                }
+                // Ensure provider is GOOGLE and mark verified
+                user.setAuthProvider(AuthProvider.GOOGLE);
+                user.setVerified(true);
+                user.setUpdatedAt(java.time.LocalDateTime.now());
+                if (user.getUsername() == null || user.getUsername().isBlank()) {
+                    user.setUsername(name);
+                }
+                if (!user.getRoles().contains(UserRole.USER)) {
+                    user.getRoles().add(UserRole.USER);
+                }
+            }
+
+            userRepository.save(user);
+
+            AuthResponse authResponse = AuthResponse.builder()
+                    .token(jwtUtil.generateToken(user.getId(), user.getEmail()))
+                    .user(new UserResponse(user))
+                    .build();
+
+            ApiResponse<AuthResponse> response = new ApiResponse<>(true, "Login successful", authResponse);
+            response.setStatusCode(200);
+            return response;
+    } catch (java.security.GeneralSecurityException | java.io.IOException e) {
+            ApiResponse<AuthResponse> response = new ApiResponse<>(false, "Google login failed", null);
+            response.setStatusCode(500);
+            return response;
+        }
     }
 }

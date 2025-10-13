@@ -1,8 +1,8 @@
 package com.student.studentcoursemanagement.dto;
 
-import lombok.Data;
-
 import java.time.LocalDateTime;
+
+import lombok.Data;
 
 @Data
 public class ApiResponse<T>{
@@ -26,6 +26,11 @@ public class ApiResponse<T>{
     public ApiResponse(boolean success, String message, T data) {
         this(success, message);
         this.data = data;
+    }
+
+    public ApiResponse(boolean success, String message, T data, int statusCode) {
+        this(success, message, data);
+        this.statusCode = statusCode;
     }
 
 

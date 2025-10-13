@@ -4,6 +4,7 @@ import com.student.studentcoursemanagement.dto.ApiResponse;
 import com.student.studentcoursemanagement.dto.AuthResponse;
 import com.student.studentcoursemanagement.dto.LoginRequestDTO;
 import com.student.studentcoursemanagement.dto.RegisterRequestDTO;
+import com.student.studentcoursemanagement.dto.GoogleAuthRequest;
 import com.student.studentcoursemanagement.service.AuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +60,14 @@ public class AuthController {
 
         logger.info("User logged in successfully: {}", request.getEmail());
         int statusCode = response.getStatusCode() > 0 ? response.getStatusCode() : 200;
+        return ResponseEntity.status(statusCode).body(response);
+    }
+
+    @PostMapping("/google")
+    public ResponseEntity<ApiResponse<AuthResponse>> googleLogin(@Valid @RequestBody GoogleAuthRequest request) {
+        logger.info("Google login attempt");
+        ApiResponse<AuthResponse> response = authService.googleLogin(request);
+        int statusCode = response.getStatusCode() > 0 ? response.getStatusCode() : (response.isSuccess() ? 200 : 401);
         return ResponseEntity.status(statusCode).body(response);
     }
 
