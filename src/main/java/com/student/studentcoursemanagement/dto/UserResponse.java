@@ -7,24 +7,26 @@ import lombok.Data;
 
 import java.util.Set;
 
-
 @Data
 public class UserResponse {
 
     private String id;
     private String username;
     private String email;
+    private String mobileNumber;
     private boolean verified;
     private String authProvider;
     private Set<UserRole> roles;
     private String createdAt;
 
-    public UserResponse() {}
+    public UserResponse() {
+    }
 
     public UserResponse(User user) {
         this.id = user.getId();
         this.email = user.getEmail();
         this.username = user.getUsername();
+        this.mobileNumber = user.getMobileNumber();
         this.verified = user.isVerified();
         this.roles = user.getRoles();
         this.authProvider = user.getAuthProvider().name();

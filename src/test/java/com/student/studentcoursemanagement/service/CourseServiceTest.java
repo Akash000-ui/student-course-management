@@ -41,7 +41,7 @@ class CourseServiceTest {
         courseRequestDTO = CourseRequestDTO.builder()
                 .title("Java Basics")
                 .description("Learn the fundamentals of Java programming")
-                .category(CourseCategory.JAVA)
+                .category(CourseCategory.PROGRAMMING)
                 .difficulty(DifficultyLevel.BEGINNER)
                 .thumbnailUrl("https://example.com/java-basics.jpg")
                 .build();
@@ -50,10 +50,9 @@ class CourseServiceTest {
                 .id("1")
                 .title("Java Basics")
                 .description("Learn the fundamentals of Java programming")
-                .category(CourseCategory.JAVA)
+                .category(CourseCategory.PROGRAMMING)
                 .difficulty(DifficultyLevel.BEGINNER)
                 .thumbnailUrl("https://example.com/java-basics.jpg")
-                .createdBy("user123")
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
@@ -65,7 +64,7 @@ class CourseServiceTest {
         when(courseRepository.save(any(Course.class))).thenReturn(course);
 
         // When
-        ApiResponse<CourseResponseDTO> response = courseService.createCourse(courseRequestDTO, "user123");
+        ApiResponse<CourseResponseDTO> response = courseService.createCourse(courseRequestDTO);
 
         // Then
         assertTrue(response.isSuccess());

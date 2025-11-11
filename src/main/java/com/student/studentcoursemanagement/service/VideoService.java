@@ -7,6 +7,8 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import com.student.studentcoursemanagement.model.Course;
+import com.student.studentcoursemanagement.repo.UserVideoCompletionRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,9 @@ public class VideoService {
 
     @Autowired
     private EnrollmentService enrollmentService;
+
+    @Autowired
+    private UserVideoCompletionService userVideoCompletionService;
 
     /**
      * Create a new video
@@ -87,8 +92,22 @@ public class VideoService {
             assignPositionOnCreate(video, position);
             Video savedVideo = videoRepository.save(video);
 
-            // Update enrollment total videos count for all users enrolled in this course
-            enrollmentService.updateTotalVideosForCourse(request.getCourseId());
+            // No need to update enrollments - progress is calculated dynamically
+            //Now Course Model need to be updated for video ids
+
+            Optional<Course> course = courseRepository.findById(request.getCourseId());
+
+            if(!course.isPresent()){
+                throw new CourseNotFoundException("Course not found with ID: " + request.getCourseId());
+            }
+            Course existingCourse = course.get();
+            List<String> videoIds = existingCourse.getVideoIds();
+            if(videoIds == null){
+                videoIds = new ArrayList<>();
+            }
+            videoIds.add(savedVideo.getId());
+            existingCourse.setVideoIds(videoIds);
+            courseRepository.save(existingCourse);
 
             ApiResponse<VideoResponseDTO> response = new ApiResponse<>(
                     true,
@@ -240,13 +259,12 @@ public class VideoService {
             }
 
             Video video = videoOpt.get();
-            String courseId = video.getCourseId();
 
-            // No file cleanup needed since we're using Google Drive URLs
             videoRepository.deleteById(id);
 
-            // Update enrollment total videos count for all users enrolled in this course
-            enrollmentService.updateTotalVideosForCourse(courseId);
+            userVideoCompletionService.deleteCompletionsByVideoIdIfExists(id);
+
+
 
             logger.info("Video deleted successfully: {}", video.getTitle());
             return new ApiResponse<>(true, "Video deleted successfully", null, 200);
@@ -270,8 +288,9 @@ public class VideoService {
         if (!StringUtils.hasText(request.getCourseId())) {
             throw new InvalidVideoDataException("Course ID is required");
         }
-        if (request.getDescription() != null ) {
-            throw new InvalidVideoDataException("Description cannot be empty");
+        // Description is optional, but if provided, it should not be blank
+        if (request.getDescription() != null && request.getDescription().trim().isEmpty()) {
+            throw new InvalidVideoDataException("Description cannot be empty if provided");
         }
     }
 

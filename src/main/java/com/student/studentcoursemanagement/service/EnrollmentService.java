@@ -17,7 +17,6 @@ import com.student.studentcoursemanagement.model.Course;
 import com.student.studentcoursemanagement.model.Enrollment;
 import com.student.studentcoursemanagement.repo.CourseRepo;
 import com.student.studentcoursemanagement.repo.EnrollmentRepo;
-import com.student.studentcoursemanagement.repo.VideoRepo;
 
 @Service
 public class EnrollmentService {
@@ -31,7 +30,7 @@ public class EnrollmentService {
     private CourseRepo courseRepo;
 
     @Autowired
-    private VideoRepo videoRepo;
+    private UserVideoCompletionService userVideoCompletionService;
 
     /**
      * Enroll user in a course
@@ -48,18 +47,14 @@ public class EnrollmentService {
             throw new AlreadyEnrolledException("User is already enrolled in this course");
         }
 
-        // Create enrollment
+        // Create enrollment (progress will be calculated dynamically)
         Enrollment enrollment = new Enrollment(userId, request.getCourseId());
-        
-        // Set total videos count
-        int totalVideos = (int) videoRepo.countByCourseId(request.getCourseId());
-        enrollment.setTotalVideos(totalVideos);
 
         // Save enrollment
         Enrollment savedEnrollment = enrollmentRepo.save(enrollment);
-        
+
         logger.info("User {} successfully enrolled in course {}", userId, request.getCourseId());
-        
+
         return mapToResponseDTO(savedEnrollment, course);
     }
 
@@ -70,7 +65,7 @@ public class EnrollmentService {
         logger.info("Fetching enrollments for user {}", userId);
 
         List<Enrollment> enrollments = enrollmentRepo.findByUserIdOrderByEnrolledAtDesc(userId);
-        
+
         return enrollments.stream()
                 .map(this::mapToResponseDTOWithCourse)
                 .collect(Collectors.toList());
@@ -89,27 +84,6 @@ public class EnrollmentService {
                 .orElseThrow(() -> new CourseNotFoundException("Course not found with ID: " + courseId));
 
         return mapToResponseDTO(enrollment, course);
-    }
-
-    /**
-     * Update enrollment progress when user completes a video
-     */
-    public EnrollmentResponseDTO completeVideo(String userId, String courseId) {
-        logger.info("Marking video as completed for user {} in course {}", userId, courseId);
-
-        Enrollment enrollment = enrollmentRepo.findByUserIdAndCourseId(userId, courseId)
-                .orElseThrow(() -> new EnrollmentNotFoundException("Enrollment not found for user and course"));
-
-        enrollment.completeVideo();
-        Enrollment updatedEnrollment = enrollmentRepo.save(enrollment);
-
-        Course course = courseRepo.findById(courseId)
-                .orElseThrow(() -> new CourseNotFoundException("Course not found with ID: " + courseId));
-
-        logger.info("Video completed for user {} in course {}. Progress: {}%", 
-                   userId, courseId, updatedEnrollment.getProgressPercentage());
-
-        return mapToResponseDTO(updatedEnrollment, course);
     }
 
     /**
@@ -132,14 +106,17 @@ public class EnrollmentService {
 
     /**
      * Get completed enrollments for a user
+     * NOTE: Filters completed courses by checking if completedAt is not null
      */
     public List<EnrollmentResponseDTO> getCompletedEnrollments(String userId) {
         logger.info("Fetching completed enrollments for user {}", userId);
 
-        List<Enrollment> enrollments = enrollmentRepo.findByUserIdAndIsCompletedOrderByCompletedAtDesc(userId, true);
-        
-        return enrollments.stream()
+        // Get all enrollments and filter those with completedAt set
+        List<Enrollment> allEnrollments = enrollmentRepo.findByUserIdOrderByEnrolledAtDesc(userId);
+
+        return allEnrollments.stream()
                 .map(this::mapToResponseDTOWithCourse)
+                .filter(dto -> dto.isCompleted() || dto.getCompletedAt() != null)
                 .collect(Collectors.toList());
     }
 
@@ -150,7 +127,7 @@ public class EnrollmentService {
         logger.info("Fetching recent enrollments for user {}", userId);
 
         List<Enrollment> enrollments = enrollmentRepo.findTop5ByUserIdOrderByLastAccessedAtDesc(userId);
-        
+
         return enrollments.stream()
                 .map(this::mapToResponseDTOWithCourse)
                 .collect(Collectors.toList());
@@ -165,31 +142,19 @@ public class EnrollmentService {
 
     /**
      * Get enrollment statistics for a user
+     * NOTE: Calculates completion dynamically from actual progress
      */
     public EnrollmentStats getUserEnrollmentStats(String userId) {
         long totalEnrollments = enrollmentRepo.countByUserId(userId);
-        long completedEnrollments = enrollmentRepo.countByUserIdAndIsCompleted(userId, true);
-        
+
+        // Calculate completed enrollments by checking actual progress
+        List<Enrollment> enrollments = enrollmentRepo.findByUserIdOrderByEnrolledAtDesc(userId);
+        long completedEnrollments = enrollments.stream()
+                .map(this::mapToResponseDTOWithCourse)
+                .filter(dto -> dto.isCompleted())
+                .count();
+
         return new EnrollmentStats(totalEnrollments, completedEnrollments);
-    }
-
-    /**
-     * Update total videos count for all enrollments in a course
-     */
-    public void updateTotalVideosForCourse(String courseId) {
-        logger.info("Updating total videos count for course {}", courseId);
-
-        int totalVideos = (int) videoRepo.countByCourseId(courseId);
-        List<Enrollment> enrollments = enrollmentRepo.findByCourseIdOrderByEnrolledAtDesc(courseId);
-        
-        for (Enrollment enrollment : enrollments) {
-            enrollment.setTotalVideos(totalVideos);
-        }
-        
-        enrollmentRepo.saveAll(enrollments);
-        
-        logger.info("Updated total videos count to {} for {} enrollments in course {}", 
-                   totalVideos, enrollments.size(), courseId);
     }
 
     /**
@@ -201,7 +166,7 @@ public class EnrollmentService {
     }
 
     /**
-     * Map Enrollment to EnrollmentResponseDTO
+     * Map Enrollment to EnrollmentResponseDTO with real-time progress calculation
      */
     private EnrollmentResponseDTO mapToResponseDTO(Enrollment enrollment, Course course) {
         EnrollmentResponseDTO dto = new EnrollmentResponseDTO();
@@ -210,12 +175,29 @@ public class EnrollmentService {
         dto.setCourseId(enrollment.getCourseId());
         dto.setEnrolledAt(enrollment.getEnrolledAt());
         dto.setLastAccessedAt(enrollment.getLastAccessedAt());
-        dto.setCompleted(enrollment.isCompleted());
         dto.setCompletedAt(enrollment.getCompletedAt());
-        dto.setProgressPercentage(enrollment.getProgressPercentage());
-        dto.setCompletedVideos(enrollment.getCompletedVideos());
-        dto.setTotalVideos(enrollment.getTotalVideos());
 
+        // ✅ CALCULATE REAL-TIME PROGRESS from UserVideoCompletion
+        com.student.studentcoursemanagement.dto.VideoCompletionResponse progress = userVideoCompletionService
+                .getProgress(enrollment.getUserId(), enrollment.getCourseId());
+
+        dto.setCompletedVideos((int) progress.getTotalCompleted());
+        dto.setTotalVideos((int) progress.getTotalVideos());
+
+        int progressPercentage = calculateProgress(progress.getTotalCompleted(), progress.getTotalVideos());
+        dto.setProgressPercentage(progressPercentage);
+
+        boolean isCompleted = progressPercentage == 100;
+        dto.setCompleted(isCompleted);
+
+        // ✅ AUTO-SET completedAt if just completed
+        if (isCompleted && enrollment.getCompletedAt() == null) {
+            enrollment.setCompletedAt(java.time.LocalDateTime.now());
+            enrollmentRepo.save(enrollment);
+            dto.setCompletedAt(enrollment.getCompletedAt());
+        }
+
+        // Enrich with course data
         if (course != null) {
             dto.setCourseTitle(course.getTitle());
             dto.setCourseDescription(course.getDescription());
@@ -223,6 +205,15 @@ public class EnrollmentService {
         }
 
         return dto;
+    }
+
+    /**
+     * Helper method to calculate progress percentage
+     */
+    private int calculateProgress(long completed, long total) {
+        if (total == 0)
+            return 0;
+        return (int) Math.round((completed * 100.0) / total);
     }
 
     /**

@@ -38,5 +38,5 @@ public interface CourseRepo extends MongoRepository<Course, String> {
             String title, CourseCategory category, DifficultyLevel difficulty);
             
     // Find courses by created by user
-    List<Course> findByCreatedBy(String createdBy);
+//    List<Course> findByCreatedBy(String createdBy);
 }

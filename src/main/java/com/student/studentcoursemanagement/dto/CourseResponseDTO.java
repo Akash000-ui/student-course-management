@@ -3,6 +3,7 @@ package com.student.studentcoursemanagement.dto;
 import com.student.studentcoursemanagement.model.Course;
 import com.student.studentcoursemanagement.model.CourseCategory;
 import com.student.studentcoursemanagement.model.DifficultyLevel;
+import com.student.studentcoursemanagement.model.Language;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,7 +27,15 @@ public class CourseResponseDTO {
     private List<String> videoIds;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private String createdBy;
+
+    // Trainer Information
+    private String trainerName;
+    private String trainerBio;
+    private String experience;
+    private String linkedinProfile;
+    private String fieldOfWork;
+    private String profilePictureUrl;
+    private Language language;
 
     public static CourseResponseDTO fromEntity(Course course) {
         return CourseResponseDTO.builder()
@@ -39,7 +48,13 @@ public class CourseResponseDTO {
                 .videoIds(course.getVideoIds())
                 .createdAt(course.getCreatedAt())
                 .updatedAt(course.getUpdatedAt())
-                .createdBy(course.getCreatedBy())
+                .trainerName(course.getTrainerName())
+                .trainerBio(course.getTrainerBio())
+                .experience(course.getExperience())
+                .linkedinProfile(course.getLinkedinProfile())
+                .fieldOfWork(course.getFieldOfWork())
+                .profilePictureUrl(course.getProfilePictureUrl())
+                .language(course.getLanguage())
                 .build();
     }
 }

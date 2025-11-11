@@ -20,7 +20,6 @@ public class UserVideoCompletionService {
     @Autowired
     private VideoRepo videoRepo;
 
-
     public VideoCompletionResponse markCompleted(String userId, String courseId, String videoId) {
         boolean exists = completionRepo.existsByUserIdAndVideoId(userId, videoId);
         if (!exists) {
@@ -36,19 +35,48 @@ public class UserVideoCompletionService {
                     .build());
         }
 
-        long totalCompleted = completionRepo.countByUserIdAndCourseId(userId, courseId);
-        long totalVideos = videoRepo.countByCourseId(courseId);
-        List<String> completedIds = completionRepo.findByUserIdAndCourseId(userId, courseId)
-                .stream().map(UserVideoCompletion::getVideoId).collect(Collectors.toList());
+        // Get all completion records for this user+course
+        List<String> allCompletedIds = completionRepo.findByUserIdAndCourseId(userId, courseId)
+                .stream()
+                .map(UserVideoCompletion::getVideoId)
+                .collect(Collectors.toList());
 
-        return new VideoCompletionResponse(courseId, videoId, exists, totalCompleted, totalVideos, completedIds);
+        // ✅ FILTER: Only count videos that still exist (ignore deleted videos)
+        List<String> validCompletedIds = allCompletedIds.stream()
+                .filter(id -> videoRepo.existsById(id))
+                .collect(Collectors.toList());
+
+        long totalCompleted = validCompletedIds.size();
+        long totalVideos = videoRepo.countByCourseId(courseId);
+
+        return new VideoCompletionResponse(courseId, videoId, exists, totalCompleted, totalVideos, validCompletedIds);
     }
 
     public VideoCompletionResponse getProgress(String userId, String courseId) {
-        long totalCompleted = completionRepo.countByUserIdAndCourseId(userId, courseId);
+        // Get all completion records for this user+course
+        List<String> allCompletedIds = completionRepo.findByUserIdAndCourseId(userId, courseId)
+                .stream()
+                .map(UserVideoCompletion::getVideoId)
+                .collect(Collectors.toList());
+
+        // ✅ FILTER: Only count videos that still exist (ignore deleted videos)
+        List<String> validCompletedIds = allCompletedIds.stream()
+                .filter(id -> videoRepo.existsById(id))
+                .collect(Collectors.toList());
+
+        long totalCompleted = validCompletedIds.size();
         long totalVideos = videoRepo.countByCourseId(courseId);
-        List<String> completedIds = completionRepo.findByUserIdAndCourseId(userId, courseId)
-                .stream().map(UserVideoCompletion::getVideoId).collect(Collectors.toList());
-        return new VideoCompletionResponse(courseId, null, false, totalCompleted, totalVideos, completedIds);
+
+        return new VideoCompletionResponse(courseId, null, false, totalCompleted, totalVideos, validCompletedIds);
+    }
+
+    public void deleteCompletionsByVideoIdIfExists(String id) {
+        List<UserVideoCompletion> userVideoCompletions = completionRepo.getUserVideoCompletionByVideoId(id);
+
+        if (userVideoCompletions.isEmpty()){
+            return;
+        } else {
+            completionRepo.deleteByVideoId(id);
+        }
     }
 }

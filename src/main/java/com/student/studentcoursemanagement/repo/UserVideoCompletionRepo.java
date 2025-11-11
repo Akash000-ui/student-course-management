@@ -20,4 +20,8 @@ public interface UserVideoCompletionRepo extends MongoRepository<UserVideoComple
      * Delete all completion records for a course
      */
     void deleteByCourseId(String courseId);
+
+    List<UserVideoCompletion> getUserVideoCompletionByVideoId(String videoId);
+
+    void deleteByVideoId(String videoId);
 }

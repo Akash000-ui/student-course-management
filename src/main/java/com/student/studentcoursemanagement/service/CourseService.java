@@ -40,10 +40,10 @@ public class CourseService {
     @Autowired
     private UserVideoCompletionRepo completionRepository;
 
-//    @Autowired
-//    private FileUploadService fileUploadService;
+    // @Autowired
+    // private FileUploadService fileUploadService;
 
-    public ApiResponse<CourseResponseDTO> createCourse(CourseRequestDTO request, String createdBy) {
+    public ApiResponse<CourseResponseDTO> createCourse(CourseRequestDTO request) {
         try {
             logger.info("Creating new course with title: {}", request.getTitle());
 
@@ -53,7 +53,13 @@ public class CourseService {
                     .category(request.getCategory())
                     .difficulty(request.getDifficulty())
                     .thumbnailUrl(request.getThumbnailUrl())
-                    .createdBy(createdBy)
+                    .trainerName(request.getTrainerName())
+                    .trainerBio(request.getTrainerBio())
+                    .experience(request.getExperience())
+                    .linkedinProfile(request.getLinkedinProfile())
+                    .fieldOfWork(request.getFieldOfWork())
+                    .profilePictureUrl(request.getProfilePictureUrl())
+                    .language(request.getLanguage())
                     .createdAt(LocalDateTime.now())
                     .updatedAt(LocalDateTime.now())
                     .build();
@@ -174,6 +180,13 @@ public class CourseService {
             existingCourse.setCategory(request.getCategory());
             existingCourse.setDifficulty(request.getDifficulty());
             existingCourse.setThumbnailUrl(request.getThumbnailUrl());
+            existingCourse.setTrainerName(request.getTrainerName());
+            existingCourse.setTrainerBio(request.getTrainerBio());
+            existingCourse.setExperience(request.getExperience());
+            existingCourse.setLinkedinProfile(request.getLinkedinProfile());
+            existingCourse.setFieldOfWork(request.getFieldOfWork());
+            existingCourse.setProfilePictureUrl(request.getProfilePictureUrl());
+            existingCourse.setLanguage(request.getLanguage());
             existingCourse.setUpdatedAt(LocalDateTime.now());
 
             Course updatedCourse = courseRepository.save(existingCourse);
@@ -214,33 +227,34 @@ public class CourseService {
             completionRepository.deleteByCourseId(id);
 
             // 4) If thumbnailUrl points to a locally stored file, try deleting it
-//            String thumb = course.getThumbnailUrl();
-//            if (thumb != null && !thumb.isBlank()) {
-//                String lc = thumb.toLowerCase();
-//                String toDelete = null;
-//                final String dlPrefix = "/api/files/download/";
-//                final String viewPrefix = "/api/files/view/";
-//                if (lc.contains(dlPrefix)) {
-//                    int idx = lc.indexOf(dlPrefix);
-//                    toDelete = thumb.substring(idx + dlPrefix.length());
-//                } else if (lc.contains(viewPrefix)) {
-//                    int idx = lc.indexOf(viewPrefix);
-//                    toDelete = thumb.substring(idx + viewPrefix.length());
-//                } else if (!(lc.startsWith("http://") || lc.startsWith("https://"))) {
-//                    // Probably a direct relative path saved in DB
-//                    toDelete = thumb;
-//                }
-//
-//                if (toDelete != null && !toDelete.isBlank()) {
-//                    boolean deleted = fileUploadService.deleteFile(toDelete);
-//                    if (deleted) {
-//                        logger.info("Deleted local thumbnail {} for course {}", toDelete, id);
-//                    } else {
-//                        logger.warn("Could not delete thumbnail {} for course {} (may be external or already removed)",
-//                                toDelete, id);
-//                    }
-//                }
-//            }
+            // String thumb = course.getThumbnailUrl();
+            // if (thumb != null && !thumb.isBlank()) {
+            // String lc = thumb.toLowerCase();
+            // String toDelete = null;
+            // final String dlPrefix = "/api/files/download/";
+            // final String viewPrefix = "/api/files/view/";
+            // if (lc.contains(dlPrefix)) {
+            // int idx = lc.indexOf(dlPrefix);
+            // toDelete = thumb.substring(idx + dlPrefix.length());
+            // } else if (lc.contains(viewPrefix)) {
+            // int idx = lc.indexOf(viewPrefix);
+            // toDelete = thumb.substring(idx + viewPrefix.length());
+            // } else if (!(lc.startsWith("http://") || lc.startsWith("https://"))) {
+            // // Probably a direct relative path saved in DB
+            // toDelete = thumb;
+            // }
+            //
+            // if (toDelete != null && !toDelete.isBlank()) {
+            // boolean deleted = fileUploadService.deleteFile(toDelete);
+            // if (deleted) {
+            // logger.info("Deleted local thumbnail {} for course {}", toDelete, id);
+            // } else {
+            // logger.warn("Could not delete thumbnail {} for course {} (may be external or
+            // already removed)",
+            // toDelete, id);
+            // }
+            // }
+            // }
 
             courseRepository.deleteById(id);
 
@@ -262,27 +276,27 @@ public class CourseService {
         }
     }
 
-    public ApiResponse<List<CourseResponseDTO>> getCoursesByCreator(String createdBy) {
-        try {
-            logger.info("Fetching courses created by user: {}", createdBy);
-
-            List<Course> courses = courseRepository.findByCreatedBy(createdBy);
-            List<CourseResponseDTO> courseResponses = courses.stream()
-                    .map(CourseResponseDTO::fromEntity)
-                    .collect(Collectors.toList());
-
-            ApiResponse<List<CourseResponseDTO>> response = new ApiResponse<>(
-                    true,
-                    "Courses retrieved successfully",
-                    courseResponses);
-            response.setStatusCode(200);
-
-            logger.info("Retrieved {} courses for user: {}", courseResponses.size(), createdBy);
-            return response;
-
-        } catch (Exception e) {
-            logger.error("Error fetching courses for user {}: {}", createdBy, e.getMessage(), e);
-            throw new RuntimeException("Failed to fetch courses: " + e.getMessage());
-        }
-    }
+//    public ApiResponse<List<CourseResponseDTO>> getCoursesByCreator(String createdBy) {
+//        try {
+//            logger.info("Fetching courses created by user: {}", createdBy);
+//
+//            List<Course> courses = courseRepository.findByCreatedBy(createdBy);
+//            List<CourseResponseDTO> courseResponses = courses.stream()
+//                    .map(CourseResponseDTO::fromEntity)
+//                    .collect(Collectors.toList());
+//
+//            ApiResponse<List<CourseResponseDTO>> response = new ApiResponse<>(
+//                    true,
+//                    "Courses retrieved successfully",
+//                    courseResponses);
+//            response.setStatusCode(200);
+//
+//            logger.info("Retrieved {} courses for user: {}", courseResponses.size(), createdBy);
+//            return response;
+//
+//        } catch (Exception e) {
+//            logger.error("Error fetching courses for user {}: {}", createdBy, e.getMessage(), e);
+//            throw new RuntimeException("Failed to fetch courses: " + e.getMessage());
+//        }
+//    }
 }

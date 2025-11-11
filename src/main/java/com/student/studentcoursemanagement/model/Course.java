@@ -26,15 +26,22 @@ public class Course {
     private String thumbnailUrl;
     private CourseCategory category;
     private DifficultyLevel difficulty;
-    
+
     @Builder.Default
     private List<String> videoIds = new ArrayList<>();
-    
+
+    // Trainer Information
+    private String trainerName;
+    private String trainerBio;
+    private String experience;
+    private String linkedinProfile;
+    private String fieldOfWork;
+    private String profilePictureUrl;
+    private Language language;
+
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
-    
+
     @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
-    
-    private String createdBy; // User ID who created the course
 }

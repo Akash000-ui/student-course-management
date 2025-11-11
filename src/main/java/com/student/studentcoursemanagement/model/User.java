@@ -26,6 +26,7 @@ public class User {
 
     private String username;
     private String password;
+    private String mobileNumber;
     @Builder.Default
     private boolean verified = false;
     private LocalDateTime createdAt;
@@ -34,7 +35,6 @@ public class User {
     private AuthProvider authProvider = AuthProvider.LOCAL;
     @Builder.Default
     private Set<UserRole> roles = new HashSet<>();
-
 
     public User(String email, String username, String password) {
         this();

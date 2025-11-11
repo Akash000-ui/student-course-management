@@ -24,88 +24,80 @@ public class CourseController {
     @Autowired
     private CourseService courseService;
 
-
     @PostMapping
     public ResponseEntity<ApiResponse<CourseResponseDTO>> createCourse(
-            @Valid @RequestBody CourseRequestDTO request,
-            @RequestHeader(value = "X-User-Id", required = false, defaultValue = "system") String userId) {
-        
+            @Valid @RequestBody CourseRequestDTO request) {
+
         logger.info("Create course request received for title: {}", request.getTitle());
-        
-        ApiResponse<CourseResponseDTO> response = courseService.createCourse(request, userId);
+
+        ApiResponse<CourseResponseDTO> response = courseService.createCourse(request);
         int statusCode = response.getStatusCode() > 0 ? response.getStatusCode() : 201;
-        
+
         return ResponseEntity.status(statusCode).body(response);
     }
-
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<CourseResponseDTO>>> getAllCourses(
             @RequestParam(required = false) CourseCategory category,
             @RequestParam(required = false) DifficultyLevel difficulty,
             @RequestParam(required = false) String search) {
-        
-        logger.info("Get all courses request with filters - category: {}, difficulty: {}, search: {}", 
+
+        logger.info("Get all courses request with filters - category: {}, difficulty: {}, search: {}",
                 category, difficulty, search);
-        
+
         ApiResponse<List<CourseResponseDTO>> response = courseService.getAllCourses(category, difficulty, search);
         int statusCode = response.getStatusCode() > 0 ? response.getStatusCode() : 200;
-        
+
         return ResponseEntity.status(statusCode).body(response);
     }
-
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<CourseResponseDTO>> getCourseById(@PathVariable String id) {
-        
+
         logger.info("Get course by ID request: {}", id);
-        
+
         ApiResponse<CourseResponseDTO> response = courseService.getCourseById(id);
         int statusCode = response.getStatusCode() > 0 ? response.getStatusCode() : 200;
-        
+
         return ResponseEntity.status(statusCode).body(response);
     }
-
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<CourseResponseDTO>> updateCourse(
             @PathVariable String id,
             @Valid @RequestBody CourseRequestDTO request) {
-        
+
         logger.info("Update course request for ID: {}", id);
-        
+
         ApiResponse<CourseResponseDTO> response = courseService.updateCourse(id, request);
         int statusCode = response.getStatusCode() > 0 ? response.getStatusCode() : 200;
-        
+
         return ResponseEntity.status(statusCode).body(response);
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<String>> deleteCourse(@PathVariable String id) {
-        
+
         logger.info("Delete course request for ID: {}", id);
-        
+
         ApiResponse<String> response = courseService.deleteCourse(id);
         int statusCode = response.getStatusCode() > 0 ? response.getStatusCode() : 200;
-        
+
         return ResponseEntity.status(statusCode).body(response);
     }
 
+//    @GetMapping("/my-courses")
+//    public ResponseEntity<ApiResponse<List<CourseResponseDTO>>> getMyCourses(
+//            @RequestHeader(value = "X-User-Id", required = false, defaultValue = "system") String userId) {
+//
+//        logger.info("Get my courses request for user: {}", userId);
+//
+//        ApiResponse<List<CourseResponseDTO>> response = courseService.getCoursesByCreator(userId);
+//        int statusCode = response.getStatusCode() > 0 ? response.getStatusCode() : 200;
+//
+//        return ResponseEntity.status(statusCode).body(response);
+//    }
 
-    @GetMapping("/my-courses")
-    public ResponseEntity<ApiResponse<List<CourseResponseDTO>>> getMyCourses(
-            @RequestHeader(value = "X-User-Id", required = false, defaultValue = "system") String userId) {
-        
-        logger.info("Get my courses request for user: {}", userId);
-        
-        ApiResponse<List<CourseResponseDTO>> response = courseService.getCoursesByCreator(userId);
-        int statusCode = response.getStatusCode() > 0 ? response.getStatusCode() : 200;
-        
-        return ResponseEntity.status(statusCode).body(response);
-    }
-
-    
     @GetMapping("/health")
     public ResponseEntity<String> health() {
         return ResponseEntity.ok("Course service is running");

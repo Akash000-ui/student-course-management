@@ -1,12 +1,14 @@
 package com.student.studentcoursemanagement.service;
 
-import com.student.studentcoursemanagement.controller.AuthController;
 import com.student.studentcoursemanagement.dto.ApiResponse;
 import com.student.studentcoursemanagement.dto.AuthResponse;
 import com.student.studentcoursemanagement.dto.GoogleAuthRequest;
 import com.student.studentcoursemanagement.dto.LoginRequestDTO;
 import com.student.studentcoursemanagement.dto.RegisterRequestDTO;
 import com.student.studentcoursemanagement.dto.UserResponse;
+import com.student.studentcoursemanagement.dto.ForgotPasswordRequest;
+import com.student.studentcoursemanagement.dto.VerifyOtpRequest;
+import com.student.studentcoursemanagement.dto.ResetPasswordRequest;
 import com.student.studentcoursemanagement.model.AuthProvider;
 import com.student.studentcoursemanagement.model.User;
 import com.student.studentcoursemanagement.model.UserRole;
@@ -38,13 +40,15 @@ public class AuthService {
     @Autowired
     private UserRepo userRepository;
 
+    @Autowired
+    private OtpService otpService;
+
     @Value("${google.clientId:}")
     private String googleClientId;
 
     private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
 
-
-    public ApiResponse<AuthResponse> register(RegisterRequestDTO request){
+    public ApiResponse<AuthResponse> register(RegisterRequestDTO request) {
 
         if (userRepository.existsByEmail(request.getEmail())) {
             ApiResponse<AuthResponse> response = new ApiResponse<>(false, "Email already exists", null);
@@ -52,7 +56,7 @@ public class AuthService {
             return response;
         }
 
-        if (request.getEmail().isEmpty()){
+        if (request.getEmail().isEmpty()) {
             ApiResponse<AuthResponse> response = new ApiResponse<>(false, "Email is required", null);
             response.setStatusCode(400);
             return response;
@@ -63,16 +67,36 @@ public class AuthService {
             return response;
         }
 
+        if (request.getMobileNumber() == null || request.getMobileNumber().isEmpty()) {
+            ApiResponse<AuthResponse> response = new ApiResponse<>(false, "Mobile number is required", null);
+            response.setStatusCode(400);
+            return response;
+        }
+
+        // Check if email is verified via OTP
+        if (!otpService.isEmailVerified(request.getEmail())) {
+            ApiResponse<AuthResponse> response = new ApiResponse<>(false,
+                    "Email not verified. Please verify your email with OTP first.", null);
+            response.setStatusCode(403);
+            return response;
+        }
+
         User user = new User();
         user.setEmail(request.getEmail());
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setMobileNumber(request.getMobileNumber());
+        user.setVerified(true);
         user.setCreatedAt(java.time.LocalDateTime.now());
         user.setUpdatedAt(java.time.LocalDateTime.now());
 
         user.getRoles().add(UserRole.USER);
-        
+
         userRepository.save(user);
+
+        // Clean up OTP after successful registration
+        otpService.deleteOtp(request.getEmail());
+
         AuthResponse authResponse = AuthResponse.builder()
                 .token(jwtUtil.generateToken(user.getId(), user.getEmail()))
                 .user(new UserResponse(user))
@@ -101,7 +125,8 @@ public class AuthService {
 
         // If the account is a Google account, require Google sign-in
         if (user.getAuthProvider() == AuthProvider.GOOGLE) {
-            ApiResponse<AuthResponse> response = new ApiResponse<>(false, "This account uses Google sign-in. Please sign in with Google.", null);
+            ApiResponse<AuthResponse> response = new ApiResponse<>(false,
+                    "This account uses Google sign-in. Please sign in with Google.", null);
             response.setStatusCode(409);
             return response;
         }
@@ -124,9 +149,113 @@ public class AuthService {
             return response;
         }
 
+        ApiResponse<AuthResponse> response = new ApiResponse<>(true, "Login successful", authResponse);
+        response.setStatusCode(200);
+        return response;
+    }
 
+    /**
+     * Verify password without logging in - for 2FA flow
+     */
+    public ApiResponse<String> verifyPassword(com.student.studentcoursemanagement.dto.VerifyPasswordRequest request) {
+        User user = userRepository.findByEmail(request.getEmail());
+        if (user == null) {
+            ApiResponse<String> response = new ApiResponse<>(false, "User not found", null);
+            response.setStatusCode(404);
+            return response;
+        }
+
+        // If the account is a Google account, require Google sign-in
+        if (user.getAuthProvider() == AuthProvider.GOOGLE) {
+            ApiResponse<String> response = new ApiResponse<>(false,
+                    "This account uses Google sign-in. Please sign in with Google.", null);
+            response.setStatusCode(409);
+            return response;
+        }
+
+        if (user.getPassword() == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            ApiResponse<String> response = new ApiResponse<>(false, "Invalid credentials", null);
+            response.setStatusCode(401);
+            return response;
+        }
+
+        ApiResponse<String> response = new ApiResponse<>(true, "Password verified successfully", null);
+        response.setStatusCode(200);
+        return response;
+    }
+
+    /**
+     * Complete login with OTP verification - for 2FA flow
+     */
+    public ApiResponse<AuthResponse> completeLogin(
+            com.student.studentcoursemanagement.dto.CompleteLoginRequest request) {
+        // First verify OTP
+        if (!otpService.verifyOtp(request.getEmail(), request.getOtp())) {
+            ApiResponse<AuthResponse> response = new ApiResponse<>(false, "Invalid or expired OTP", null);
+            response.setStatusCode(401);
+            return response;
+        }
+
+        // Find user by email
+        User user = userRepository.findByEmail(request.getEmail());
+        if (user == null) {
+            ApiResponse<AuthResponse> response = new ApiResponse<>(false, "User not found", null);
+            response.setStatusCode(404);
+            return response;
+        }
+
+        // Clean up OTP after successful verification
+        otpService.deleteOtp(request.getEmail());
+
+        // Generate token
+        AuthResponse authResponse = AuthResponse.builder()
+                .token(jwtUtil.generateToken(user.getId(), user.getEmail()))
+                .user(new UserResponse(user))
+                .build();
+
+        if (authResponse.getToken() == null) {
+            ApiResponse<AuthResponse> response = new ApiResponse<>(false, "Token generation failed", null);
+            response.setStatusCode(500);
+            return response;
+        }
 
         ApiResponse<AuthResponse> response = new ApiResponse<>(true, "Login successful", authResponse);
+        response.setStatusCode(200);
+        return response;
+    }
+
+    public ApiResponse<AuthResponse> loginWithOtp(com.student.studentcoursemanagement.dto.OtpLoginRequest request) {
+        // First verify OTP
+        if (!otpService.verifyOtp(request.getEmail(), request.getOtp())) {
+            ApiResponse<AuthResponse> response = new ApiResponse<>(false, "Invalid or expired OTP", null);
+            response.setStatusCode(401);
+            return response;
+        }
+
+        // Find user by email
+        User user = userRepository.findByEmail(request.getEmail());
+        if (user == null) {
+            ApiResponse<AuthResponse> response = new ApiResponse<>(false, "User not found", null);
+            response.setStatusCode(404);
+            return response;
+        }
+
+        // Clean up OTP after successful verification
+        otpService.deleteOtp(request.getEmail());
+
+        // Generate token
+        AuthResponse authResponse = AuthResponse.builder()
+                .token(jwtUtil.generateToken(user.getId(), user.getEmail()))
+                .user(new UserResponse(user))
+                .build();
+
+        if (authResponse.getToken() == null) {
+            ApiResponse<AuthResponse> response = new ApiResponse<>(false, "Token generation failed", null);
+            response.setStatusCode(500);
+            return response;
+        }
+
+        ApiResponse<AuthResponse> response = new ApiResponse<>(true, "Login successful via OTP", authResponse);
         response.setStatusCode(200);
         return response;
     }
@@ -156,9 +285,8 @@ public class AuthService {
         }
     }
 
-
     public ApiResponse<String> addAdminRole(String userId) {
-        
+
         User user = userRepository.findById(userId).orElse(null);
         if (user == null) {
             ApiResponse<String> response = new ApiResponse<>(false, "User not found", null);
@@ -184,14 +312,16 @@ public class AuthService {
     public ApiResponse<AuthResponse> googleLogin(GoogleAuthRequest request) {
         // Verify the ID token with Google
         try {
-            String expectedClientId = Optional.ofNullable(request.getClientId()).filter(s -> !s.isBlank()).orElse(googleClientId);
+            String expectedClientId = Optional.ofNullable(request.getClientId()).filter(s -> !s.isBlank())
+                    .orElse(googleClientId);
             if (expectedClientId == null || expectedClientId.isBlank()) {
                 ApiResponse<AuthResponse> response = new ApiResponse<>(false, "Google clientId not configured", null);
                 response.setStatusCode(500);
                 return response;
             }
 
-            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), GsonFactory.getDefaultInstance())
+            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(),
+                    GsonFactory.getDefaultInstance())
                     .setAudience(Collections.singletonList(expectedClientId))
                     .build();
 
@@ -221,7 +351,8 @@ public class AuthService {
             } else {
                 // If existing LOCAL account, block sign-in via Google to avoid account takeover
                 if (user.getAuthProvider() == AuthProvider.LOCAL) {
-                    ApiResponse<AuthResponse> response = new ApiResponse<>(false, "Account registered with email/password. Please sign in with password.", null);
+                    ApiResponse<AuthResponse> response = new ApiResponse<>(false,
+                            "Account registered with email/password. Please sign in with password.", null);
                     response.setStatusCode(409);
                     return response;
                 }
@@ -247,10 +378,79 @@ public class AuthService {
             ApiResponse<AuthResponse> response = new ApiResponse<>(true, "Login successful", authResponse);
             response.setStatusCode(200);
             return response;
-    } catch (java.security.GeneralSecurityException | java.io.IOException e) {
+        } catch (java.security.GeneralSecurityException | java.io.IOException e) {
             ApiResponse<AuthResponse> response = new ApiResponse<>(false, "Google login failed", null);
             response.setStatusCode(500);
             return response;
         }
+    }
+
+    public ApiResponse<String> forgotPassword(ForgotPasswordRequest request) {
+        User user = userRepository.findByEmail(request.getEmail());
+
+        if (user == null) {
+            ApiResponse<String> response = new ApiResponse<>(false, "User not found with this email", null);
+            response.setStatusCode(404);
+            return response;
+        }
+
+        // Check if user is using LOCAL auth provider
+        if (user.getAuthProvider() != AuthProvider.LOCAL) {
+            ApiResponse<String> response = new ApiResponse<>(false, 
+                "Password reset is only available for email/password accounts. You signed up with " + 
+                user.getAuthProvider().toString(), null);
+            response.setStatusCode(400);
+            return response;
+        }
+
+        // Generate and send OTP
+        otpService.generateAndSendOtp(request.getEmail());
+
+        ApiResponse<String> response = new ApiResponse<>(true, 
+            "OTP sent successfully to your email for password reset", null);
+        response.setStatusCode(200);
+        return response;
+    }
+
+    public ApiResponse<String> verifyResetOtp(VerifyOtpRequest request) {
+        if (!otpService.verifyOtp(request.getEmail(), request.getOtp())) {
+            ApiResponse<String> response = new ApiResponse<>(false, "Invalid or expired OTP", null);
+            response.setStatusCode(400);
+            return response;
+        }
+
+        // Mark OTP as verified for password reset
+        ApiResponse<String> response = new ApiResponse<>(true, "OTP verified successfully. You can now reset your password.", null);
+        response.setStatusCode(200);
+        return response;
+    }
+
+    public ApiResponse<String> resetPassword(ResetPasswordRequest request) {
+        // Verify OTP again for security
+        if (!otpService.verifyOtp(request.getEmail(), request.getOtp())) {
+            ApiResponse<String> response = new ApiResponse<>(false, "Invalid or expired OTP", null);
+            response.setStatusCode(400);
+            return response;
+        }
+
+        User user = userRepository.findByEmail(request.getEmail());
+
+        if (user == null) {
+            ApiResponse<String> response = new ApiResponse<>(false, "User not found", null);
+            response.setStatusCode(404);
+            return response;
+        }
+
+        // Update password
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        user.setUpdatedAt(java.time.LocalDateTime.now());
+        userRepository.save(user);
+
+        // Delete OTP after successful password reset
+        otpService.deleteOtp(request.getEmail());
+
+        ApiResponse<String> response = new ApiResponse<>(true, "Password reset successfully", null);
+        response.setStatusCode(200);
+        return response;
     }
 }
