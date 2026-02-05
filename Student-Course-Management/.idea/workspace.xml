@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="753d3e40-e070-452f-9cdc-179a1b982be9" name="Changes" comment="replaced raw files with google drive links">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/student/studentcoursemanagement/config/CorsConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/student/studentcoursemanagement/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/student/studentcoursemanagement/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/student/studentcoursemanagement/controller/CourseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/student/studentcoursemanagement/controller/CourseController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/student/studentcoursemanagement/dto/CourseRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/student/studentcoursemanagement/dto/CourseRequestDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/student/studentcoursemanagement/dto/CourseResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/student/studentcoursemanagement/dto/CourseResponseDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/student/studentcoursemanagement/model/Course.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/student/studentcoursemanagement/model/Course.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/student/studentcoursemanagement/repo/CourseRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/student/studentcoursemanagement/repo/CourseRepo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/student/studentcoursemanagement/service/CourseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/student/studentcoursemanagement/service/CourseService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/student/studentcoursemanagement/service/CourseServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/student/studentcoursemanagement/service/CourseServiceTest.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+        <option value="Enum" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;trivioglobaldev&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Akash000-ui/student-course-management.git&quot;,
+    &quot;accountId&quot;: &quot;effb92bb-f5f8-4562-9622-a7fc2f26a983&quot;
+  }
+}</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/src/test/java/com/student/studentcoursemanagement/service/CourseServiceTest.java" root0="SKIP_INSPECTION" />
+  </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="30zdzrRrXbPF0nugOGLobOCW7RP" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Spring Boot.StudentCourseManagementApplication.executor&quot;: &quot;Run&quot;,
+    &quot;full.screen.before.presentation.mode&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/stdudent_website/Student-Course-Management&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.intellij.platform.ide.impl.presentationAssistant.PresentationAssistantConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RunManager">
+    <configuration name="StudentCourseManagementApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="Student-Course-Management" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.student.studentcoursemanagement.StudentCourseManagementApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.27812.49" />
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-IU-251.27812.49" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="753d3e40-e070-452f-9cdc-179a1b982be9" name="Changes" comment="" />
+      <created>1754634604234</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1754634604234</updated>
+      <workItem from="1754634606223" duration="9704000" />
+      <workItem from="1754647264709" duration="1989000" />
+      <workItem from="1754655464036" duration="1195000" />
+      <workItem from="1754658670396" duration="2500000" />
+      <workItem from="1754806366806" duration="5366000" />
+      <workItem from="1754823198615" duration="8594000" />
+      <workItem from="1754832224134" duration="1086000" />
+      <workItem from="1754894021296" duration="6451000" />
+      <workItem from="1754908983390" duration="3590000" />
+      <workItem from="1754996532462" duration="1694000" />
+      <workItem from="1754999020101" duration="1552000" />
+      <workItem from="1755068558980" duration="652000" />
+      <workItem from="1755158426548" duration="5000" />
+      <workItem from="1755171053956" duration="25000" />
+      <workItem from="1756216481831" duration="3512000" />
+      <workItem from="1756303398654" duration="4609000" />
+      <workItem from="1756359146210" duration="28000" />
+      <workItem from="1756359474580" duration="731000" />
+      <workItem from="1756367988417" duration="2097000" />
+      <workItem from="1756435781207" duration="649000" />
+      <workItem from="1756452528097" duration="6394000" />
+      <workItem from="1756459262122" duration="555000" />
+      <workItem from="1756466765930" duration="512000" />
+      <workItem from="1756468504037" duration="963000" />
+      <workItem from="1756625854588" duration="56000" />
+      <workItem from="1756626108618" duration="188000" />
+      <workItem from="1756626358214" duration="1284000" />
+      <workItem from="1756627985514" duration="6454000" />
+      <workItem from="1756880096512" duration="702000" />
+      <workItem from="1757403939353" duration="388000" />
+      <workItem from="1757405409835" duration="1204000" />
+      <workItem from="1757476637782" duration="3306000" />
+      <workItem from="1757497892022" duration="2202000" />
+      <workItem from="1757574728121" duration="1246000" />
+      <workItem from="1757592290026" duration="594000" />
+      <workItem from="1757656748435" duration="16000" />
+      <workItem from="1758458718782" duration="4857000" />
+      <workItem from="1758527977483" duration="2193000" />
+      <workItem from="1758777129496" duration="22000" />
+      <workItem from="1759734656314" duration="8579000" />
+      <workItem from="1759827798542" duration="8000" />
+      <workItem from="1760338236508" duration="4788000" />
+      <workItem from="1761232299499" duration="76000" />
+      <workItem from="1761743590296" duration="4010000" />
+      <workItem from="1761748200558" duration="971000" />
+      <workItem from="1761800499045" duration="4654000" />
+      <workItem from="1761812431165" duration="4003000" />
+      <workItem from="1761970948317" duration="3773000" />
+      <workItem from="1761999919521" duration="13000" />
+      <workItem from="1762150753875" duration="2484000" />
+      <workItem from="1762771417525" duration="2452000" />
+      <workItem from="1762781992765" duration="11000" />
+      <workItem from="1762842436813" duration="7981000" />
+      <workItem from="1762852823858" duration="2245000" />
+      <workItem from="1762932744596" duration="11000" />
+      <workItem from="1763121185616" duration="3510000" />
+      <workItem from="1763189139858" duration="4045000" />
+      <workItem from="1763203979665" duration="899000" />
+      <workItem from="1763966974110" duration="2365000" />
+      <workItem from="1766759113933" duration="1538000" />
+    </task>
+    <task id="LOCAL-00001" summary="first commit">
+      <option name="closed" value="true" />
+      <created>1754635388491</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1754635388491</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Login and Registration Functionality complete">
+      <option name="closed" value="true" />
+      <created>1754648756546</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1754648756546</updated>
+    </task>
+    <task id="LOCAL-00003" summary="replaced raw files with google drive links">
+      <option name="closed" value="true" />
+      <created>1760338401136</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1760338401136</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Added This Features and resolved the Statistics Issues.&#10;&#10;Replaced raw files storage with notes and code files with drive url.&#10;&#10;Resolved this issue that showing Enroll-Now if user allready enrolled to three tags Enorll-Now , Completed , InProgress.&#10;&#10;Resolved the bug of having home button in header for course details page.&#10;&#10;Added mobile number and email verification through otp&#10;&#10;Added update profile (email,mobile,password, user name) feature in dashboard.&#10;&#10;Added trainer details in course by changing course schema.&#10;&#10;=Stats about application=&#10;-&gt;Number of users.&#10;-&gt;Number of enrolls for each course.&#10;&#10;Course discription length limitatios resolved.&#10;&#10;Added filter courses by latest and old and A-Z and Z-A.&#10;&#10;Added mobile number feild in user Schema.&#10;&#10;Added forgot password/reset password through email otp.&#10;&#10;Added public display courses on home page with limitations to have account to view whole course.">
+      <option name="closed" value="true" />
+      <created>1762855310514</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1762855310514</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="first commit" />
+    <MESSAGE value="Login and Registration Functionality complete" />
+    <MESSAGE value="replaced raw files with google drive links" />
+    <MESSAGE value="Added This Features and resolved the Statistics Issues." />
+    <MESSAGE value="Added This Features and resolved the Statistics Issues.&#10;&#10;Replaced raw files storage with notes and code files with drive url.&#10;&#10;Resolved this issue that showing Enroll-Now if user allready enrolled to three tags Enorll-Now , Completed , InProgress.&#10;&#10;Resolved the bug of having home button in header for course details page.&#10;&#10;Added mobile number and email verification through otp&#10;&#10;Added update profile (email,mobile,password, user name) feature in dashboard.&#10;&#10;Added trainer details in course by changing course schema.&#10;&#10;=Stats about application=&#10;-&gt;Number of users.&#10;-&gt;Number of enrolls for each course.&#10;&#10;Course discription length limitatios resolved.&#10;&#10;Added filter courses by latest and old and A-Z and Z-A.&#10;&#10;Added mobile number feild in user Schema.&#10;&#10;Added forgot password/reset password through email otp.&#10;&#10;Added public display courses on home page with limitations to have account to view whole course." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added This Features and resolved the Statistics Issues.&#10;&#10;Replaced raw files storage with notes and code files with drive url.&#10;&#10;Resolved this issue that showing Enroll-Now if user allready enrolled to three tags Enorll-Now , Completed , InProgress.&#10;&#10;Resolved the bug of having home button in header for course details page.&#10;&#10;Added mobile number and email verification through otp&#10;&#10;Added update profile (email,mobile,password, user name) feature in dashboard.&#10;&#10;Added trainer details in course by changing course schema.&#10;&#10;=Stats about application=&#10;-&gt;Number of users.&#10;-&gt;Number of enrolls for each course.&#10;&#10;Course discription length limitatios resolved.&#10;&#10;Added filter courses by latest and old and A-Z and Z-A.&#10;&#10;Added mobile number feild in user Schema.&#10;&#10;Added forgot password/reset password through email otp.&#10;&#10;Added public display courses on home page with limitations to have account to view whole course." />
+  </component>
+</project>

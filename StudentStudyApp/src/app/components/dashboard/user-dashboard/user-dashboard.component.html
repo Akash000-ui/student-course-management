@@ -1,0 +1,185 @@
+<!-- Dashboard Header -->
+<div class="dashboard-header">
+  <div class="container">
+    <div class="header-content">
+      <div class="welcome-section">
+        <h1>Welcome back, {{currentUser?.username || 'Student'}}!</h1>
+        <p>Ready to continue your learning journey?</p>
+      </div>
+      <div class="stats-section">
+        <div class="stat-card" (click)="showEnrolledCourses()" [class.clickable]="true">
+          <mat-icon>book</mat-icon>
+          <div>
+            <span class="stat-number">{{enrolledCoursesCount}}</span>
+            <span class="stat-label">Enrolled Courses</span>
+          </div>
+          <mat-icon class="arrow-icon">keyboard_arrow_right</mat-icon>
+        </div>
+        <div class="stat-card" (click)="showCompletedCourses()" [class.clickable]="true">
+          <mat-icon>trending_up</mat-icon>
+          <div>
+            <span class="stat-number">{{completedCoursesCount}}</span>
+            <span class="stat-label">Completed</span>
+          </div>
+          <mat-icon class="arrow-icon">keyboard_arrow_right</mat-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Search and Filter Section -->
+<div class="search-section">
+  <div class="container">
+    <div class="search-controls">
+      <div class="search-bar">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search courses...</mat-label>
+          <input matInput [(ngModel)]="searchQuery" (input)="onSearchChange()"
+            placeholder="Search by title, instructor, or category">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="filters">
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Category</mat-label>
+          <mat-select [(ngModel)]="selectedCategory" (selectionChange)="onFilterChange()">
+            <mat-option value="">All Categories</mat-option>
+            <mat-option *ngFor="let category of categories" [value]="category.id">
+              {{category.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Difficulty</mat-label>
+          <mat-select [(ngModel)]="selectedDifficulty" (selectionChange)="onFilterChange()">
+            <mat-option value="">All Levels</mat-option>
+            <mat-option value="BEGINNER">Beginner</mat-option>
+            <mat-option value="INTERMEDIATE">Intermediate</mat-option>
+            <mat-option value="ADVANCED">Advanced</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Sort By</mat-label>
+          <mat-select [(ngModel)]="selectedSortBy" (selectionChange)="onSortChange()">
+            <mat-option value="latest">Latest First</mat-option>
+            <mat-option value="oldest">Oldest First</mat-option>
+            <mat-option value="title-asc">Title (A-Z)</mat-option>
+            <mat-option value="title-desc">Title (Z-A)</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <button mat-stroked-button (click)="clearFilters()" class="clear-filters-btn">
+          <mat-icon>clear</mat-icon>
+          Clear Filters
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Courses Section -->
+<div class="courses-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Available Courses</h2>
+      <div class="view-controls">
+        <button mat-icon-button [class.active]="viewMode === 'grid'" (click)="setViewMode('grid')"
+          matTooltip="Grid View">
+          <mat-icon>grid_view</mat-icon>
+        </button>
+        <button mat-icon-button [class.active]="viewMode === 'list'" (click)="setViewMode('list')"
+          matTooltip="List View">
+          <mat-icon>view_list</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-section" *ngIf="loading">
+      <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+      <p>Loading courses...</p>
+    </div>
+
+    <!-- No Results -->
+    <div class="no-results" *ngIf="!loading && filteredCourses.length === 0">
+      <mat-icon>search_off</mat-icon>
+      <h3>No courses found</h3>
+      <p>Try adjusting your search criteria or filters.</p>
+    </div>
+
+    <!-- Courses Grid -->
+    <div class="courses-grid" [class.list-view]="viewMode === 'list'" *ngIf="!loading && filteredCourses.length > 0">
+      <app-course-card *ngFor="let course of paginatedCourses" [course]="course"
+        [categoryName]="getCategoryName(course.categoryId)" [enrollment]="getEnrollment(course.id)"
+        (courseClick)="onCourseClick($event)" (enrollClick)="onEnrollClick($event)">
+      </app-course-card>
+    </div>
+
+    <!-- Pagination -->
+    <mat-paginator *ngIf="!loading && filteredCourses.length > 0" [length]="filteredCourses.length"
+      [pageSize]="pageSize" [pageSizeOptions]="[6, 12, 24, 48]" (page)="onPageChange($event)" showFirstLastButtons>
+    </mat-paginator>
+  </div>
+</div>
+
+<!-- Enrolled/Completed Courses Dialog -->
+<div class="overlay" *ngIf="showCoursesDialog" (click)="closeCoursesDialog()">
+  <div class="courses-dialog" (click)="$event.stopPropagation()">
+    <div class="dialog-header">
+      <h2>{{dialogTitle}}</h2>
+      <button mat-icon-button (click)="closeCoursesDialog()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="dialog-content">
+      <div *ngIf="dialogCourses.length === 0" class="no-courses">
+        <mat-icon>info</mat-icon>
+        <p>No {{dialogType}} courses found.</p>
+      </div>
+
+      <div class="course-list" *ngIf="dialogCourses.length > 0">
+        <div *ngFor="let enrollment of dialogCourses" class="course-item">
+          <div class="course-info" (click)="onCourseClick(enrollment)">
+            <img [src]="enrollment.courseThumbnail || 'assets/default-course.jpg'" [alt]="enrollment.courseTitle"
+              class="course-thumbnail">
+            <div class="course-details">
+              <h3>{{enrollment.courseTitle}}</h3>
+              <p class="course-description-preview">
+                {{(enrollment.courseDescription || 'No description available') |
+                slice:0:120}}{{enrollment.courseDescription && enrollment.courseDescription.length > 120 ? '...' : ''}}
+              </p>
+              <div class="course-meta">
+                <span class="category">Course</span>
+                <span class="enrolled-date">Enrolled: {{enrollment.enrolledAt | date:'mediumDate'}}</span>
+              </div>
+              <div class="progress-section" *ngIf="dialogType === 'enrolled'">
+                <div class="progress-info">
+                  <span>Progress: {{enrollment.progressPercentage || 0}}%</span>
+                  <span *ngIf="enrollment.completedVideos">
+                    {{enrollment.completedVideos}}/{{enrollment.totalVideos}} videos completed
+                  </span>
+                </div>
+                <mat-progress-bar [value]="enrollment.progressPercentage || 0" mode="determinate">
+                </mat-progress-bar>
+              </div>
+              <div class="completion-info" *ngIf="dialogType === 'completed'">
+                <mat-icon>check_circle</mat-icon>
+                <span>Completed on {{enrollment.completedAt | date:'mediumDate'}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="course-actions">
+            <button mat-raised-button color="primary" (click)="onCourseClick(enrollment)">
+              View Course
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

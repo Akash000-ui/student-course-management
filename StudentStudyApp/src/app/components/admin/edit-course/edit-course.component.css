@@ -1,0 +1,2 @@
+/* Reuse create-course styles for consistent look */
+@import '../create-course/create-course.component.css';

@@ -1,0 +1,192 @@
+<div class="profile-container">
+    <!-- Header -->
+    <div class="profile-header">
+        <div class="header-content">
+            <button mat-icon-button (click)="goBack()" class="back-button">
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+            <div class="header-text">
+                <h1>My Profile</h1>
+                <p>Manage your account information and preferences</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-container" *ngIf="loading">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Loading profile...</p>
+    </div>
+
+    <!-- Profile Content -->
+    <div class="profile-content" *ngIf="!loading && userProfile">
+        <div class="profile-grid">
+
+            <!-- Profile Overview Card -->
+            <div class="profile-card overview-card">
+                <div class="card-header">
+                    <mat-icon>person</mat-icon>
+                    <h2>Profile Overview</h2>
+                </div>
+                <div class="card-content">
+                    <div class="profile-avatar">
+                        <mat-icon>account_circle</mat-icon>
+                    </div>
+                    <div class="profile-info">
+                        <h3>{{userProfile.username}}</h3>
+                        <p class="email">{{userProfile.email}}</p>
+                        <div class="badges">
+                            <span class="badge verified" *ngIf="userProfile.verified">
+                                <mat-icon>verified</mat-icon>
+                                Verified
+                            </span>
+                            <span *ngFor="let role of userProfile.roles" [class]="getRoleBadgeClass(role)"
+                                class="badge">
+                                {{role}}
+                            </span>
+                        </div>
+                        <div class="account-details">
+                            <div class="detail-item">
+                                <mat-icon>login</mat-icon>
+                                <span>{{userProfile.authProvider}}</span>
+                            </div>
+                            <div class="detail-item" *ngIf="userProfile.createdAt">
+                                <mat-icon>calendar_today</mat-icon>
+                                <span>Joined {{userProfile.createdAt | date: 'MMM d, y'}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Profile Card -->
+            <div class="profile-card">
+                <div class="card-header">
+                    <mat-icon>edit</mat-icon>
+                    <h2>Edit Profile</h2>
+                </div>
+                <div class="card-content">
+                    <form [formGroup]="profileForm" (ngSubmit)="onUpdateProfile()">
+
+                        <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>Email</mat-label>
+                            <input matInput formControlName="email" readonly>
+                            <mat-icon matSuffix>email</mat-icon>
+                            <mat-hint>Email cannot be changed</mat-hint>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>Username</mat-label>
+                            <input matInput formControlName="username" placeholder="Enter your username">
+                            <mat-icon matSuffix>person</mat-icon>
+                            <mat-error *ngIf="profileForm.get('username')?.hasError('required')">
+                                Username is required
+                            </mat-error>
+                            <mat-error *ngIf="profileForm.get('username')?.hasError('minlength')">
+                                Username must be at least 3 characters
+                            </mat-error>
+                            <mat-error *ngIf="profileForm.get('username')?.hasError('maxlength')">
+                                Username cannot exceed 50 characters
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>Mobile Number</mat-label>
+                            <input matInput formControlName="mobileNumber" placeholder="Enter 10-digit mobile number">
+                            <mat-icon matSuffix>phone</mat-icon>
+                            <mat-error *ngIf="profileForm.get('mobileNumber')?.hasError('pattern')">
+                                Mobile number must be 10 digits
+                            </mat-error>
+                            <mat-hint>Optional: 10-digit mobile number</mat-hint>
+                        </mat-form-field>
+
+                        <div class="form-actions">
+                            <button mat-raised-button color="primary" type="submit"
+                                [disabled]="profileForm.invalid || savingProfile" class="save-button">
+                                <mat-icon *ngIf="!savingProfile">save</mat-icon>
+                                <mat-spinner *ngIf="savingProfile" diameter="20"></mat-spinner>
+                                {{savingProfile ? 'Saving...' : 'Save Changes'}}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Change Password Card -->
+            <div class="profile-card" *ngIf="userProfile.authProvider === 'LOCAL'">
+                <div class="card-header" (click)="togglePasswordSection()" style="cursor: pointer;">
+                    <mat-icon>lock</mat-icon>
+                    <h2>Change Password</h2>
+                    <mat-icon class="expand-icon">{{showPasswordSection ? 'expand_less' : 'expand_more'}}</mat-icon>
+                </div>
+                <div class="card-content" *ngIf="showPasswordSection">
+                    <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()">
+
+                        <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>Current Password</mat-label>
+                            <input matInput [type]="hideCurrentPassword ? 'password' : 'text'"
+                                formControlName="currentPassword" placeholder="Enter current password">
+                            <button mat-icon-button matSuffix type="button"
+                                (click)="hideCurrentPassword = !hideCurrentPassword">
+                                <mat-icon>{{hideCurrentPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            </button>
+                            <mat-error *ngIf="passwordForm.get('currentPassword')?.hasError('required')">
+                                Current password is required
+                            </mat-error>
+                            <mat-error *ngIf="passwordForm.get('currentPassword')?.hasError('minlength')">
+                                Password must be at least 6 characters
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>New Password</mat-label>
+                            <input matInput [type]="hideNewPassword ? 'password' : 'text'" formControlName="newPassword"
+                                placeholder="Enter new password">
+                            <button mat-icon-button matSuffix type="button"
+                                (click)="hideNewPassword = !hideNewPassword">
+                                <mat-icon>{{hideNewPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            </button>
+                            <mat-error *ngIf="passwordForm.get('newPassword')?.hasError('required')">
+                                New password is required
+                            </mat-error>
+                            <mat-error *ngIf="passwordForm.get('newPassword')?.hasError('minlength')">
+                                Password must be at least 6 characters
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>Confirm New Password</mat-label>
+                            <input matInput [type]="hideConfirmPassword ? 'password' : 'text'"
+                                formControlName="confirmPassword" placeholder="Re-enter new password">
+                            <button mat-icon-button matSuffix type="button"
+                                (click)="hideConfirmPassword = !hideConfirmPassword">
+                                <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            </button>
+                            <mat-error *ngIf="passwordForm.get('confirmPassword')?.hasError('required')">
+                                Please confirm your password
+                            </mat-error>
+                            <mat-error *ngIf="passwordForm.hasError('passwordMismatch') && 
+                                passwordForm.get('confirmPassword')?.touched">
+                                Passwords do not match
+                            </mat-error>
+                        </mat-form-field>
+
+                        <div class="form-actions">
+                            <button mat-stroked-button type="button" (click)="togglePasswordSection()"
+                                class="cancel-button">
+                                Cancel
+                            </button>
+                            <button mat-raised-button color="warn" type="submit"
+                                [disabled]="passwordForm.invalid || savingPassword" class="change-password-button">
+                                <mat-icon *ngIf="!savingPassword">lock_reset</mat-icon>
+                                <mat-spinner *ngIf="savingPassword" diameter="20"></mat-spinner>
+                                {{savingPassword ? 'Changing...' : 'Change Password'}}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

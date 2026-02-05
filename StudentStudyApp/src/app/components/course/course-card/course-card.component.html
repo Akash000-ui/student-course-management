@@ -1,0 +1,78 @@
+<div class="course-card" (click)="onCourseClick()" *ngIf="course">
+  <!-- Course Thumbnail with 16:9 Ratio -->
+  <div class="course-thumbnail">
+    <img *ngIf="!imageError && getThumbnailUrl()" [src]="getThumbnailUrl()" [alt]="course.title"
+      (error)="onImageError($event)" />
+
+    <div class="placeholder-image" *ngIf="imageError || !getThumbnailUrl()"
+      [style.background]="getPlaceholderGradient(course.categoryId)">
+      <mat-icon class="placeholder-icon">{{ getCategoryIcon(course.categoryId) }}</mat-icon>
+    </div>
+
+    <!-- Enrollment Status Badge -->
+    <div class="enrollment-badge" *ngIf="isEnrolled">
+      <span class="badge" [class.badge-completed]="isCompleted" [class.badge-progress]="isInProgress">
+        <mat-icon>{{ isCompleted ? 'check_circle' : 'play_circle_filled' }}</mat-icon>
+        {{ isCompleted ? 'Completed' : 'In Progress' }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Course Content -->
+  <div class="course-content">
+    <!-- Badges -->
+    <div class="course-badges">
+      <span class="badge badge-category">{{ categoryName || 'Category' }}</span>
+      <span class="badge badge-difficulty" [ngClass]="'badge-' + course.difficulty.toLowerCase()">
+        {{course.difficulty}}
+      </span>
+    </div>
+
+    <!-- Title -->
+    <h3 class="course-title">{{course.title}}</h3>
+
+    <!-- Description with Read More -->
+    <div class="description-wrapper">
+      <p class="course-description">
+        {{course.description | slice:0:120}}
+        <span *ngIf="course.description && course.description.length > 120">...</span>
+      </p>
+    </div>
+
+    <!-- Trainer Info -->
+    <div class="trainer-info">
+      <mat-icon>person_outline</mat-icon>
+      <span>{{course.trainerName}}</span>
+    </div>
+
+    <!-- Course Stats -->
+    <div class="course-stats">
+      <div class="stat-item">
+        <mat-icon>videocam</mat-icon>
+        <span>{{course.videoIds.length || 0}} videos</span>
+      </div>
+      <div class="stat-item">
+        <mat-icon>language</mat-icon>
+        <span>{{course.language | titlecase}}</span>
+      </div>
+    </div>
+
+    <!-- Progress Bar for Enrolled Courses -->
+    <div class="progress-section" *ngIf="isInProgress">
+      <div class="progress-info">
+        <span class="progress-label">Your Progress</span>
+        <span class="progress-value">{{progressPercentage}}%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="progressPercentage"></div>
+      </div>
+    </div>
+
+    <!-- Action Button -->
+    <button class="action-btn" [class.btn-completed]="isCompleted" [class.btn-enrolled]="isInProgress"
+      (click)="onEnrollClick($event)">
+      <mat-icon>{{ getButtonIcon() }}</mat-icon>
+      {{ getButtonText() }}
+    </button>
+  </div>
+</div>

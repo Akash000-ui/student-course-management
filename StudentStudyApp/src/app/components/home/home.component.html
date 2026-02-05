@@ -1,0 +1,153 @@
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="hero-container">
+    <div class="hero-content">
+      <h1 class="hero-title">Welcome to StudyHub</h1>
+      <p class="hero-subtitle">Your Gateway to Quality Education and Skill Development</p>
+      <p class="hero-description">
+        Discover thousands of courses, connect with expert instructors, and advance your career with our comprehensive
+        learning platform.
+      </p>
+      <div class="hero-actions">
+        <button mat-raised-button color="primary" class="cta-button" routerLink="/courses">
+          <mat-icon>explore</mat-icon>
+          <span>Browse Courses</span>
+        </button>
+        <button mat-raised-button color="accent" class="cta-button" routerLink="/signup">
+          <mat-icon>school</mat-icon>
+          <span>Start Learning</span>
+        </button>
+        <button mat-stroked-button class="secondary-button" routerLink="/signin">
+          <mat-icon>login</mat-icon>
+          <span>Sign In</span>
+        </button>
+      </div>
+    </div>
+    <div class="hero-image">
+      <mat-icon class="hero-icon">school</mat-icon>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section">
+  <div class="container">
+    <h2 class="section-title">Why Choose StudyHub?</h2>
+    <div class="features-grid">
+      <mat-card class="feature-card">
+        <mat-card-content>
+          <mat-icon class="feature-icon" color="primary">video_library</mat-icon>
+          <h3>Rich Video Content</h3>
+          <p>Access high-quality video lectures and tutorials from industry experts.</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="feature-card">
+        <mat-card-content>
+          <mat-icon class="feature-icon" color="primary">assignment</mat-icon>
+          <h3>Interactive Assignments</h3>
+          <p>Practice your skills with hands-on projects and real-world challenges.</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="feature-card">
+        <mat-card-content>
+          <mat-icon class="feature-icon" color="primary">workspace_premium</mat-icon>
+          <h3>Certified Learning</h3>
+          <p>Earn certificates upon completion to showcase your achievements.</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="feature-card">
+        <mat-card-content>
+          <mat-icon class="feature-icon" color="primary">support_agent</mat-icon>
+          <h3>Expert Support</h3>
+          <p>Get help from instructors and community members whenever you need it.</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="feature-card">
+        <mat-card-content>
+          <mat-icon class="feature-icon" color="primary">schedule</mat-icon>
+          <h3>Flexible Schedule</h3>
+          <p>Learn at your own pace with 24/7 access to course materials.</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="feature-card">
+        <mat-card-content>
+          <mat-icon class="feature-icon" color="primary">trending_up</mat-icon>
+          <h3>Track Progress</h3>
+          <p>Monitor your learning journey with detailed progress analytics.</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</section>
+
+<!-- Course Categories -->
+<section class="categories-section">
+  <div class="container">
+    <h2 class="section-title">Popular Course Categories</h2>
+    <div class="categories-grid">
+      <mat-card class="category-card" *ngFor="let category of categories">
+        <mat-card-content>
+          <h3>{{category.name}}</h3>
+          <p>{{category.description}}</p>
+          <mat-chip-set>
+            <mat-chip>{{category.courseCount}} courses</mat-chip>
+          </mat-chip-set>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</section>
+
+<!-- Statistics Section -->
+<section class="stats-section">
+  <div class="container">
+    <h2 class="section-title">Our Impact</h2>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <mat-icon class="stat-icon">people</mat-icon>
+        <h3>10,000+</h3>
+        <p>Active Students</p>
+      </div>
+      <div class="stat-item">
+        <mat-icon class="stat-icon">school</mat-icon>
+        <h3>500+</h3>
+        <p>Expert Instructors</p>
+      </div>
+      <div class="stat-item">
+        <mat-icon class="stat-icon">book</mat-icon>
+        <h3>1,200+</h3>
+        <p>Quality Courses</p>
+      </div>
+      <div class="stat-item">
+        <mat-icon class="stat-icon">star</mat-icon>
+        <h3>4.8/5</h3>
+        <p>Average Rating</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <h2>Ready to Start Your Learning Journey?</h2>
+      <p>Join thousands of students who are already advancing their careers with StudyHub.</p>
+      <div class="cta-actions">
+        <button mat-raised-button color="accent" class="cta-button" routerLink="/signup">
+          <mat-icon>arrow_forward</mat-icon>
+          <span>Get Started Now</span>
+        </button>
+        <button mat-button class="learn-more-button">
+          <mat-icon>info</mat-icon>
+          <span>Learn More</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

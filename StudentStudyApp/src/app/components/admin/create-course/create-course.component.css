@@ -1,0 +1,365 @@
+.create-course-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.create-course-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  width: 100%;
+  max-width: 600px;
+  animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 8px 0;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: #666;
+  margin: 0;
+}
+
+.course-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-field {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  align-items: flex-start;
+}
+
+.half-width {
+  flex: 1;
+  min-width: 0;
+  /* Prevents flex items from overflowing */
+}
+
+.section-header {
+  margin: 30px 0 20px 0;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.section-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #667eea;
+}
+
+/* Material Form Field Styling - Cleaner approach */
+:host ::ng-deep .mat-mdc-form-field {
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-form-field-flex {
+  background-color: #fafafa;
+  border-radius: 8px;
+  padding: 4px 8px;
+}
+
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-form-field-outline {
+  color: #ddd;
+}
+
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-form-field-outline-thick {
+  color: #667eea;
+  border-width: 2px;
+}
+
+:host ::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-form-field-outline-thick {
+  color: #667eea;
+}
+
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-input-element {
+  color: #333;
+  font-size: 14px;
+  padding: 12px 8px;
+}
+
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-input-element:focus {
+  color: #333;
+  outline: none;
+}
+
+:host ::ng-deep .mat-mdc-form-field .mat-mdc-floating-label {
+  color: #666;
+  font-size: 14px;
+}
+
+:host ::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-floating-label {
+  color: #667eea;
+}
+
+:host ::ng-deep .mat-mdc-select-panel {
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  max-height: 300px;
+}
+
+:host ::ng-deep .mat-mdc-option {
+  font-size: 14px;
+  padding: 12px 16px;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+
+  &.mat-mdc-option-active {
+    background-color: #667eea;
+    color: white;
+  }
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.form-actions button {
+  min-width: 120px;
+  height: 48px;
+  border-radius: 8px;
+  font-weight: 500;
+  text-transform: none;
+  font-size: 14px;
+}
+
+/* Primary Button Styling */
+:host ::ng-deep .mat-mdc-raised-button.mat-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+
+  &:hover:not(:disabled) {
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+    transform: translateY(-2px);
+  }
+
+  &:disabled {
+    background: #ccc;
+    color: #666;
+    box-shadow: none;
+  }
+}
+
+:host ::ng-deep .mat-mdc-button.mat-primary {
+  color: #667eea;
+  font-weight: 500;
+
+  &:hover:not(:disabled) {
+    background-color: rgba(102, 126, 234, 0.08);
+  }
+}
+
+/* Spinner Animation */
+.spinner {
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error States */
+:host ::ng-deep .mat-mdc-form-field.mat-form-field-invalid .mat-mdc-form-field-outline-thick {
+  color: #f44336;
+}
+
+:host ::ng-deep .mat-mdc-form-field-error {
+  font-size: 12px;
+  color: #f44336;
+  margin-top: 4px;
+  display: block;
+}
+
+/* Textarea specific styling */
+:host ::ng-deep .mat-mdc-form-field textarea.mat-mdc-input-element {
+  resize: vertical;
+  min-height: 80px;
+  max-height: 200px;
+  line-height: 1.5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .create-course-container {
+    padding: 16px;
+    min-height: 100vh;
+  }
+
+  .create-course-card {
+    padding: 24px;
+    margin: 0;
+    max-width: 100%;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .half-width {
+    width: 100%;
+    flex: none;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+    gap: 12px;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .create-course-card {
+    padding: 20px;
+    border-radius: 12px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .course-form {
+    gap: 20px;
+  }
+}
+
+/* Focus and Accessibility */
+.form-field:focus-within {
+  outline: none;
+  /* Remove this as Material fields handle focus themselves */
+}
+
+/* Smooth transitions */
+.form-field,
+.form-row,
+.course-form {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Prevent form field overlapping and layout issues */
+:host ::ng-deep .mat-mdc-form-field-wrapper {
+  padding-bottom: 1.25em;
+}
+
+:host ::ng-deep .mat-mdc-form-field-subscript-wrapper {
+  position: static;
+  margin-top: 4px;
+}
+
+/* Ensure proper spacing between form elements */
+.create-course-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  width: 100%;
+  max-width: 600px;
+  animation: slideUp 0.6s ease-out;
+  overflow: visible;
+  /* Ensure dropdowns and errors are visible */
+}
+
+/* Custom scrollbar for textarea */
+:host ::ng-deep .mat-mdc-input-element {
+  scrollbar-width: thin;
+  scrollbar-color: #667eea #f0f0f0;
+}
+
+:host ::ng-deep .mat-mdc-input-element::-webkit-scrollbar {
+  width: 6px;
+}
+
+:host ::ng-deep .mat-mdc-input-element::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 3px;
+}
+
+:host ::ng-deep .mat-mdc-input-element::-webkit-scrollbar-thumb {
+  background: #667eea;
+  border-radius: 3px;
+}
+
+:host ::ng-deep .mat-mdc-input-element::-webkit-scrollbar-thumb:hover {
+  background: #5a6fd8;
+}
+
+/* Additional fixes for form field consistency */
+:host ::ng-deep .mat-mdc-form-field-infix {
+  padding: 12px 0;
+  min-height: auto;
+}
+
+:host ::ng-deep .mat-mdc-select-value {
+  font-size: 14px;
+  color: #333;
+}
+
+:host ::ng-deep .mat-mdc-select-arrow {
+  color: #666;
+}

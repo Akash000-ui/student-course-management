@@ -1,0 +1,174 @@
+<div class="create-course-container">
+  <div class="create-course-card">
+    <!-- Header -->
+    <div class="header">
+      <h2 class="title">Create New Course</h2>
+      <p class="subtitle">Fill in the details to create a new course</p>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="courseForm" (ngSubmit)="onSubmit()" class="course-form">
+      <!-- Title Field -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Course Title</mat-label>
+        <input matInput formControlName="title" placeholder="Enter course title" maxlength="100">
+        <mat-error *ngIf="courseForm.get('title')?.hasError('required')">
+          Course title is required
+        </mat-error>
+        <mat-error *ngIf="courseForm.get('title')?.hasError('minlength')">
+          Title must be at least 3 characters long
+        </mat-error>
+        <mat-error *ngIf="courseForm.get('title')?.hasError('maxlength')">
+          Title cannot exceed 100 characters
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Description Field -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Course Description</mat-label>
+        <textarea matInput formControlName="description" placeholder="Enter course description" rows="4">
+        </textarea>
+        <mat-error *ngIf="courseForm.get('description')?.hasError('required')">
+          Course description is required
+        </mat-error>
+        <mat-error *ngIf="courseForm.get('description')?.hasError('minlength')">
+          Description must be at least 10 characters long
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Category and Difficulty Row -->
+      <div class="form-row">
+        <!-- Category Field -->
+        <mat-form-field appearance="outline" class="form-field half-width">
+          <mat-label>Category</mat-label>
+          <mat-select formControlName="categoryId">
+            <mat-option *ngIf="loadingCategories" disabled>
+              Loading categories...
+            </mat-option>
+            <mat-option *ngFor="let category of categories" [value]="category.id">
+              {{ category.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="courseForm.get('categoryId')?.hasError('required')">
+            Category is required
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Difficulty Field -->
+        <mat-form-field appearance="outline" class="form-field half-width">
+          <mat-label>Difficulty</mat-label>
+          <mat-select formControlName="difficulty">
+            <mat-option *ngFor="let difficulty of difficulties" [value]="difficulty">
+              {{ difficulty | titlecase }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="courseForm.get('difficulty')?.hasError('required')">
+            Difficulty is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Thumbnail URL Field -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Thumbnail URL (Optional)</mat-label>
+        <input matInput formControlName="thumbnailUrl"
+          placeholder="Paste any image link (http/https/data blob, CDN, etc.)">
+        <mat-icon matSuffix>image</mat-icon>
+        <!-- No pattern restriction; backend can validate if needed -->
+      </mat-form-field>
+
+      <!-- Trainer Information Section -->
+      <div class="section-header">
+        <h3>Trainer Information</h3>
+      </div>
+
+      <!-- Trainer Name -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Trainer Name</mat-label>
+        <input matInput formControlName="trainerName" placeholder="Enter trainer's full name">
+        <mat-error *ngIf="courseForm.get('trainerName')?.hasError('required')">
+          Trainer name is required
+        </mat-error>
+        <mat-error *ngIf="courseForm.get('trainerName')?.hasError('minlength')">
+          Trainer name must be at least 2 characters long
+        </mat-error>
+        <mat-error *ngIf="courseForm.get('trainerName')?.hasError('maxlength')">
+          Trainer name cannot exceed 50 characters
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Trainer Bio -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Trainer Bio</mat-label>
+        <textarea matInput formControlName="trainerBio" placeholder="Enter trainer's background and qualifications"
+          rows="4"></textarea>
+        <mat-error *ngIf="courseForm.get('trainerBio')?.hasError('required')">
+          Trainer bio is required
+        </mat-error>
+        <mat-error *ngIf="courseForm.get('trainerBio')?.hasError('minlength')">
+          Trainer bio must be at least 10 characters long
+        </mat-error>
+      </mat-form-field>
+
+      <div class="form-row">
+        <!-- Experience -->
+        <mat-form-field appearance="outline" class="form-field half-width">
+          <mat-label>Experience</mat-label>
+          <input matInput formControlName="experience" placeholder="e.g., 5 years in Software Development">
+          <mat-error *ngIf="courseForm.get('experience')?.hasError('required')">
+            Experience is required
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Field of Work -->
+        <mat-form-field appearance="outline" class="form-field half-width">
+          <mat-label>Field of Work</mat-label>
+          <input matInput formControlName="fieldOfWork" placeholder="e.g., Software Development, Data Science">
+          <mat-error *ngIf="courseForm.get('fieldOfWork')?.hasError('required')">
+            Field of work is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <!-- Language -->
+        <mat-form-field appearance="outline" class="form-field half-width">
+          <mat-label>Course Language</mat-label>
+          <mat-select formControlName="language">
+            <mat-option *ngFor="let language of languages" [value]="language">
+              {{ language | titlecase }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="courseForm.get('language')?.hasError('required')">
+            Course language is required
+          </mat-error>
+        </mat-form-field>
+
+        <!-- LinkedIn Profile (Optional) -->
+        <mat-form-field appearance="outline" class="form-field half-width">
+          <mat-label>LinkedIn Profile (Optional)</mat-label>
+          <input matInput formControlName="linkedinProfile" placeholder="https://linkedin.com/in/username">
+          <mat-icon matSuffix>link</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <!-- Profile Picture URL (Optional) -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Profile Picture URL (Optional)</mat-label>
+        <input matInput formControlName="profilePictureUrl" placeholder="Enter trainer's profile picture URL">
+        <mat-icon matSuffix>person</mat-icon>
+      </mat-form-field>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        <button type="button" mat-button color="primary" (click)="onCancel()" [disabled]="loading">
+          Cancel
+        </button>
+        <button type="submit" mat-raised-button color="primary" [disabled]="loading || !courseForm.valid">
+          <mat-icon *ngIf="loading" class="spinner">refresh</mat-icon>
+          <span>{{ loading ? 'Creating...' : 'Create Course' }}</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

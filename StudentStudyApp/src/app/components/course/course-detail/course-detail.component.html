@@ -1,0 +1,317 @@
+<div class="course-detail-container">
+  <!-- Header -->
+  <div class="header">
+    <button mat-icon-button (click)="goBack()" class="back-button">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div class="course-info" *ngIf="course">
+      <h1 class="course-title">{{ course.title }}</h1>
+      <div class="course-description-container">
+        <p class="course-description">{{ getDisplayDescription() }}</p>
+        <button *ngIf="shouldShowReadMore()" mat-button color="primary" class="read-more-btn"
+          (click)="toggleDescription()">
+          Read More
+        </button>
+        <button *ngIf="shouldShowReadLess()" mat-button color="primary" class="read-more-btn"
+          (click)="toggleDescription()">
+          Read Less
+        </button>
+      </div>
+      <div class="course-meta">
+        <mat-chip>{{ categoryName || 'Category' }}</mat-chip>
+        <mat-chip>{{ course.difficulty | titlecase }}</mat-chip>
+        <mat-chip>{{ course.language | titlecase }}</mat-chip>
+        <span class="created-date">Created: {{ formatDate(course.createdAt) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trainer Information Section -->
+  <div *ngIf="course" class="trainer-section">
+    <div class="trainer-card">
+      <div class="trainer-header">
+        <div class="trainer-avatar">
+          <img *ngIf="course.profilePictureUrl" [src]="course.profilePictureUrl" [alt]="course.trainerName"
+            class="trainer-image">
+          <mat-icon *ngIf="!course.profilePictureUrl" class="default-avatar">person</mat-icon>
+        </div>
+        <div class="trainer-info">
+          <h3 class="trainer-name">{{ course.trainerName }}</h3>
+          <p class="trainer-field">{{ course.fieldOfWork }}</p>
+          <p class="trainer-experience">{{ course.experience }}</p>
+          <div class="trainer-badges">
+            <mat-chip class="language-chip">{{ course.language | titlecase }}</mat-chip>
+          </div>
+        </div>
+        <div class="trainer-actions" *ngIf="course.linkedinProfile">
+          <div class="linkedin-section">
+            <p class="linkedin-label">LinkedIn Profile:</p>
+            <div class="linkedin-controls">
+              <a [href]="getLinkedInUrl()" target="_blank" rel="noopener noreferrer" mat-raised-button color="primary"
+                class="linkedin-visit-button">
+                <mat-icon>open_in_new</mat-icon>
+                Visit LinkedIn
+              </a>
+              <button mat-icon-button class="copy-button" (click)="copyLinkedInUrl()" [title]="'Copy LinkedIn URL'">
+                <mat-icon>content_copy</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="trainer-bio">
+        <p>{{ getDisplayTrainerBio() }}</p>
+        <div class="bio-actions">
+          <button *ngIf="shouldShowTrainerBioReadMore()" mat-button color="primary" class="read-more-btn"
+            (click)="toggleTrainerBio()">
+            Read More
+          </button>
+          <button *ngIf="shouldShowTrainerBioReadLess()" mat-button color="primary" class="read-more-btn"
+            (click)="toggleTrainerBio()">
+            Read Less
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enrollment Section -->
+  <div *ngIf="course && user" class="enrollment-section">
+    <!-- Not Enrolled State -->
+    <div *ngIf="!isEnrolled" class="enrollment-card">
+      <div class="enrollment-info">
+        <mat-icon class="enrollment-icon">school</mat-icon>
+        <div class="enrollment-text">
+          <h3>Start Learning Today</h3>
+          <p>Enroll in this course to access all videos and track your progress</p>
+        </div>
+      </div>
+      <button mat-raised-button color="primary" (click)="enrollInCourse()" [disabled]="enrolling" class="enroll-button">
+        <mat-icon *ngIf="enrolling">hourglass_empty</mat-icon>
+        <mat-icon *ngIf="!enrolling">add</mat-icon>
+        {{ enrolling ? 'Enrolling...' : 'Enroll Now' }}
+      </button>
+    </div>
+
+    <!-- Enrolled State -->
+    <div *ngIf="isEnrolled && enrollment" class="progress-card">
+      <div class="progress-header">
+        <div class="progress-title">
+          <mat-icon class="progress-icon" [style.color]="getProgressColor()">trending_up</mat-icon>
+          <div class="progress-text">
+            <h3>Your Learning Progress</h3>
+            <p>{{ getEnrollmentStatus() }}</p>
+          </div>
+        </div>
+
+        <!-- Completion Badge -->
+        <div *ngIf="enrollment.isCompleted" class="completion-badge">
+          <mat-icon>emoji_events</mat-icon>
+          <span>Completed!</span>
+        </div>
+      </div>
+
+      <div class="progress-content">
+        <div class="progress-overview">
+          <div class="progress-circle">
+            <svg class="progress-ring" width="80" height="80">
+              <circle class="progress-ring-background" stroke="#e0e0e0" stroke-width="6" fill="transparent" r="34"
+                cx="40" cy="40" />
+              <circle class="progress-ring-fill" [attr.stroke]="getProgressColor()" stroke-width="6" fill="transparent"
+                r="34" cx="40" cy="40" [style.stroke-dasharray]="getProgressCircumference()"
+                [style.stroke-dashoffset]="getProgressOffset()" stroke-linecap="round" />
+            </svg>
+            <div class="progress-percentage">{{ enrollment.progressPercentage || 0 }}%</div>
+          </div>
+
+          <div class="progress-stats">
+            <div class="stat-item">
+              <div class="stat-icon">
+                <mat-icon>play_circle_filled</mat-icon>
+              </div>
+              <div class="stat-details">
+                <span class="stat-value">{{ enrollment.completedVideos || 0 }}</span>
+                <span class="stat-label">Videos Completed</span>
+              </div>
+            </div>
+
+            <div class="stat-item">
+              <div class="stat-icon">
+                <mat-icon>schedule</mat-icon>
+              </div>
+              <div class="stat-details">
+                <span class="stat-value">{{ enrollment.totalVideos || 0 }}</span>
+                <span class="stat-label">Total Videos</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Linear Progress Bar -->
+        <div class="linear-progress-container">
+          <div class="progress-info">
+            <span class="progress-label">Course Progress</span>
+            <span class="progress-text">{{ enrollment.completedVideos || 0 }}/{{ enrollment.totalVideos || 0 }}
+              videos</span>
+          </div>
+          <mat-progress-bar mode="determinate" [value]="enrollment.progressPercentage || 0" [color]="'primary'"
+            class="progress-bar">
+          </mat-progress-bar>
+        </div>
+
+        <!-- Next Steps -->
+        <div *ngIf="!enrollment.isCompleted && enrollment.progressPercentage < 100" class="next-steps">
+          <h4>Continue Learning</h4>
+          <p *ngIf="selectedVideo">Currently watching: <strong>{{ selectedVideo.title }}</strong></p>
+          <p *ngIf="!selectedVideo">Select a video to continue your learning journey</p>
+
+          <button *ngIf="selectedVideo && !enrollment.isCompleted && enrollment.progressPercentage < 100"
+            mat-raised-button color="accent" (click)="markVideoCompleted()" class="complete-video-btn">
+            <mat-icon>check_circle</mat-icon>
+            Mark Current Video as Completed
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading course...</p>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!loading && course && isEnrolled" class="main-content">
+
+    <!-- Video Player Section -->
+    <div class="video-section">
+      <div *ngIf="selectedVideo" class="video-player">
+        <div class="video-header">
+          <h2>{{ selectedVideo.title }}</h2>
+          <span class="video-date">{{ formatDate(selectedVideo.createdAt) }}</span>
+        </div>
+
+        <div class="video-container">
+          <iframe [src]="safeVideoUrl" frameborder="0" allowfullscreen class="video-iframe">
+          </iframe>
+        </div>
+
+        <div class="video-info">
+          <h3>Description</h3>
+          <p>{{ selectedVideo.description }}</p>
+
+          <!-- Notes Section -->
+          <div *ngIf="selectedVideo.driveNotesFileLink" class="attachments-section">
+            <h4><mat-icon>description</mat-icon> Notes Available</h4>
+            <p>Notes file is available on Google Drive.</p>
+            <button mat-raised-button color="primary" (click)="openGoogleDriveFile(selectedVideo.driveNotesFileLink)">
+              <mat-icon>open_in_new</mat-icon>
+              {{ selectedVideo.driveNotesFileName || 'Notes' }}
+            </button>
+          </div>
+
+          <!-- Code Files Section -->
+          <div *ngIf="selectedVideo.driveCodeFileLinks && selectedVideo.driveCodeFileLinks.length > 0"
+            class="attachments-section">
+            <h4><mat-icon>code</mat-icon> Code Files Available</h4>
+            <p>{{ selectedVideo.driveCodeFileLinks.length }} code file(s) available on Google Drive.</p>
+            <div class="code-files-list">
+              <button *ngFor="let fileLink of selectedVideo.driveCodeFileLinks; let i = index" mat-stroked-button
+                (click)="openGoogleDriveFile(fileLink)" class="code-file-button">
+                <mat-icon>open_in_new</mat-icon>
+                {{ selectedVideo.driveCodeFileNames?.[i] || 'Code File ' + (i + 1) }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!selectedVideo && videos.length === 0" class="no-videos">
+        <mat-icon class="no-videos-icon">videocam_off</mat-icon>
+        <h3>No Videos Available</h3>
+        <p>This course doesn't have any videos yet.</p>
+      </div>
+    </div>
+
+    <!-- Video List Sidebar -->
+    <div class="video-list-section" *ngIf="videos.length > 0">
+      <div class="video-list-header">
+        <h3>Course Videos</h3>
+        <div class="video-progress-summary">
+          <span class="completed-count">{{ enrollment?.completedVideos || 0 }}/{{ enrollment?.totalVideos ||
+            videos.length }} completed</span>
+          <mat-progress-bar mode="determinate" [value]="(enrollment?.progressPercentage || 0)"
+            class="video-progress-bar">
+          </mat-progress-bar>
+        </div>
+      </div>
+
+      <div class="video-list">
+        <div *ngFor="let video of videos; trackBy: trackByVideoId; let i = index" class="video-item"
+          [class.selected]="selectedVideo?.id === video.id" [class.completed]="isVideoCompleted(video.id)"
+          (click)="selectVideo(video)">
+
+          <div class="video-number">{{ (video.position ?? (i + 1)) }}</div>
+
+          <div class="video-thumbnail">
+            <img *ngIf="getYouTubeThumbnailUrl(video.videoUrl) as thumb" [src]="thumb" alt="thumbnail" />
+            <mat-icon *ngIf="!getYouTubeThumbnailUrl(video.videoUrl) && isVideoCompleted(video.id)"
+              class="completion-icon">check_circle</mat-icon>
+            <mat-icon *ngIf="!getYouTubeThumbnailUrl(video.videoUrl) && !isVideoCompleted(video.id)"
+              class="play-icon">play_circle_outline</mat-icon>
+          </div>
+
+          <div class="video-details">
+            <h4>{{ video.title }}</h4>
+            <p>{{ video.description | slice:0:80 }}{{ video.description.length > 80 ? '...' : '' }}</p>
+            <div class="video-meta">
+              <span class="video-date">{{ formatDate(video.createdAt) }}</span>
+              <div class="video-status">
+                <span *ngIf="isVideoCompleted(video.id)" class="status-completed">
+                  <mat-icon>done</mat-icon>
+                  Completed
+                </span>
+                <span *ngIf="!isVideoCompleted(video.id)" class="status-pending">
+                  <mat-icon>radio_button_unchecked</mat-icon>
+                  Not Started
+                </span>
+              </div>
+            </div>
+            <div class="video-attachments"
+              *ngIf="video.driveNotesFileLink || (video.driveCodeFileLinks && video.driveCodeFileLinks.length > 0)">
+              <mat-chip-set>
+                <mat-chip *ngIf="video.driveNotesFileLink" class="attachment-chip">
+                  <mat-icon>description</mat-icon>
+                  Notes
+                </mat-chip>
+                <mat-chip *ngIf="video.driveCodeFileLinks && video.driveCodeFileLinks.length > 0"
+                  class="attachment-chip">
+                  <mat-icon>code</mat-icon>
+                  Code Files ({{ video.driveCodeFileLinks.length }})
+                </mat-chip>
+              </mat-chip-set>
+            </div>
+          </div>
+
+          <div class="video-actions" *ngIf="selectedVideo?.id === video.id && !isVideoCompleted(video.id)">
+            <button mat-mini-fab color="accent" (click)="markVideoCompleted(); $event.stopPropagation()"
+              matTooltip="Mark as completed">
+              <mat-icon>check</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !course" class="empty-state">
+    <mat-icon class="empty-icon">school</mat-icon>
+    <h3>Course Not Found</h3>
+    <p>The course you're looking for doesn't exist or has been removed.</p>
+    <button mat-raised-button color="primary" (click)="goBack()">
+      Back to Dashboard
+    </button>
+  </div>
+</div>

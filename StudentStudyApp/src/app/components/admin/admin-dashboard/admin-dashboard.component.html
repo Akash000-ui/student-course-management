@@ -1,0 +1,179 @@
+<!-- Admin Dashboard Header -->
+<div class="admin-header">
+  <div class="container">
+    <div class="header-content">
+      <div class="welcome-section">
+        <h1>Admin Dashboard</h1>
+        <p>Welcome back, {{currentUser?.username || 'Admin'}}!</p>
+      </div>
+      <div class="action-section">
+        <button mat-raised-button color="accent" routerLink="/admin/categories" style="margin-right: 1rem;">
+          <mat-icon>label</mat-icon>
+          Manage Categories
+        </button>
+        <button mat-raised-button color="primary" (click)="navigateToCreateCourse()">
+          <mat-icon>add</mat-icon>
+          Create New Course
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Statistics Section -->
+<div class="stats-section">
+  <div class="container">
+    <h2 class="section-title">Dashboard Overview</h2>
+
+    <!-- Loading State -->
+    <div class="stats-loading" *ngIf="statsLoading">
+      <mat-progress-spinner mode="indeterminate" diameter="40"></mat-progress-spinner>
+    </div>
+
+    <!-- Main Stats Grid -->
+    <div class="stats-grid" *ngIf="!statsLoading">
+      <div class="stat-card">
+        <mat-icon class="stat-icon users">people</mat-icon>
+        <div class="stat-content">
+          <span class="stat-number">{{totalStudents}}</span>
+          <span class="stat-label">Total Users</span>
+          <span class="stat-growth" *ngIf="newUsersThisMonth > 0">+{{newUsersThisMonth}} this month</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <mat-icon class="stat-icon courses">school</mat-icon>
+        <div class="stat-content">
+          <span class="stat-number">{{totalCourses}}</span>
+          <span class="stat-label">Total Courses</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <mat-icon class="stat-icon enrollments">assignment</mat-icon>
+        <div class="stat-content">
+          <span class="stat-number">{{totalEnrollments}}</span>
+          <span class="stat-label">Total Enrollments</span>
+          <span class="stat-growth" *ngIf="newEnrollmentsThisMonth > 0">+{{newEnrollmentsThisMonth}} this month</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <mat-icon class="stat-icon videos">video_library</mat-icon>
+        <div class="stat-content">
+          <span class="stat-number">{{totalVideos}}</span>
+          <span class="stat-label">Total Videos</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity Card -->
+    <div class="activity-card" *ngIf="stats && !statsLoading">
+      <h3>Today's Activity</h3>
+      <div class="activity-stats">
+        <div class="activity-item">
+          <mat-icon>person_add</mat-icon>
+          <span>{{stats.recentActivity.newUsersToday}} new users</span>
+        </div>
+        <div class="activity-item">
+          <mat-icon>assignment_turned_in</mat-icon>
+          <span>{{stats.recentActivity.newEnrollmentsToday}} new enrollments</span>
+        </div>
+        <div class="activity-item">
+          <mat-icon>trending_up</mat-icon>
+          <span>Most popular: {{stats.recentActivity.mostPopularCourse}}
+            ({{stats.recentActivity.mostPopularCourseEnrollments}} enrollments)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Course Statistics Table -->
+    <div class="course-stats-table" *ngIf="stats && stats.courseStats.length > 0 && !statsLoading">
+      <h3>Course Performance</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Course</th>
+            <th>Total Enrollments</th>
+            <th>Active</th>
+            <th>Completed</th>
+            <th>Videos</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let courseStat of stats.courseStats">
+            <td class="course-name">{{courseStat.courseTitle}}</td>
+            <td><span class="badge badge-primary">{{courseStat.totalEnrollments}}</span></td>
+            <td><span class="badge badge-info">{{courseStat.activeEnrollments}}</span></td>
+            <td><span class="badge badge-success">{{courseStat.completedEnrollments}}</span></td>
+            <td>{{courseStat.totalVideos}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Courses Management Section -->
+<div class="courses-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Course Management</h2>
+      <p>Manage your courses, add videos, and upload content</p>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-section" *ngIf="loading">
+      <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+      <p>Loading courses...</p>
+    </div>
+
+    <!-- Courses Grid -->
+    <div class="courses-grid" *ngIf="!loading">
+      <div class="course-admin-card" *ngFor="let course of courses">
+        <div class="course-header">
+          <img [src]="course.thumbnailUrl || '/assets/course-placeholder.jpg'" [alt]="course.title"
+            class="course-image">
+          <div class="course-badge">{{getCategoryName(course.categoryId)}}</div>
+        </div>
+
+        <div class="course-content">
+          <h3 class="course-title">{{course.title}}</h3>
+          <p class="course-description">{{course.description}}</p>
+
+          <div class="course-meta">
+            <span class="difficulty-badge" [class]="'difficulty-' + course.difficulty.toLowerCase()">
+              {{course.difficulty}}
+            </span>
+            <span class="video-count">{{course.videoIds.length}} videos</span>
+          </div>
+        </div>
+
+        <div class="course-actions">
+          <button mat-icon-button color="primary" (click)="editCourse(course)" matTooltip="Edit Course">
+            <mat-icon>edit</mat-icon>
+          </button>
+
+          <button mat-icon-button color="accent" (click)="manageCourseVideos(course)" matTooltip="Manage Videos">
+            <mat-icon>video_library</mat-icon>
+          </button>
+
+          <button mat-icon-button color="warn" (click)="deleteCourse(course)" matTooltip="Delete Course">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- No courses message -->
+      <div class="no-courses" *ngIf="courses.length === 0">
+        <mat-icon>school</mat-icon>
+        <h3>No courses yet</h3>
+        <p>Create your first course to get started</p>
+        <button mat-raised-button color="primary" (click)="navigateToCreateCourse()">
+          <mat-icon>add</mat-icon>
+          Create Course
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
