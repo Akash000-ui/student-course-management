@@ -277,5 +277,3 @@ docker push yourusername/studiehub-backend:latest
 - Render for backend hosting
 - Netlify for frontend hosting
 ```
-
-Copy and paste this into your GitHub repository's README.md file!Copy and paste this into your GitHub repository's README.md file!
