@@ -1,0 +1,130 @@
+<div class="coupon-management-container">
+    <div class="header">
+        <h1>Coupon Management</h1>
+        <button class="btn btn-primary" (click)="showCreate()">+ Create Coupon</button>
+    </div>
+
+    <!-- Error Alert -->
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-spinner">
+        <p>Loading coupons...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && coupons.length === 0" class="empty-state">
+        <p>No coupons found. <a href="javascript:void(0)" (click)="showCreate()">Create one</a></p>
+    </div>
+
+    <!-- Coupons Table -->
+    <div *ngIf="!isLoading && coupons.length > 0" class="coupons-table-section">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Discount %</th>
+                        <th>Usage</th>
+                        <th>Valid Period</th>
+                        <th>Min Purchase</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let coupon of coupons" [class]="getStatusBadgeClass(coupon)">
+                        <td class="coupon-code">{{ coupon.code }}</td>
+                        <td class="discount">{{ coupon.discountPercentage }}%</td>
+                        <td class="usage">
+                            <span>{{ coupon.currentGlobalUsage }} / {{ coupon.maxGlobalUsage }}</span>
+                            <div class="usage-bar">
+                                <div class="usage-progress" [style.width.%]="getUsagePercentage(coupon)"></div>
+                            </div>
+                        </td>
+                        <td class="valid-period">
+                            {{ formatDate(coupon.validFrom) }} - {{ formatDate(coupon.validUntil) }}
+                        </td>
+                        <td class="min-purchase">₹{{ coupon.minPurchaseAmount }}</td>
+                        <td>
+                            <span [class]="'badge ' + getStatusBadgeClass(coupon)">
+                                {{ getStatusText(coupon) }}
+                            </span>
+                        </td>
+                        <td class="actions">
+                            <button class="btn-icon edit" (click)="editCoupon(coupon)" title="Edit">✏️</button>
+                            <button class="btn-icon delete" (click)="deleteCoupon(coupon)" title="Delete">🗑️</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Create/Edit Form Modal -->
+    <div *ngIf="showCreateForm || showEditForm" class="modal-overlay" (click)="hideForm()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <h2>{{ showCreateForm ? 'Create New Coupon' : 'Edit Coupon' }}</h2>
+                <button class="close-btn" (click)="hideForm()">×</button>
+            </div>
+
+            <form class="coupon-form">
+                <div class="form-group">
+                    <label>Coupon Code</label>
+                    <input type="text" [(ngModel)]="formData.code" name="code" placeholder="e.g., SAVE10"
+                        [readonly]="showEditForm" class="form-control" />
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Discount Percentage (%)</label>
+                        <input type="number" min="1" max="100" [(ngModel)]="formData.discountPercentage"
+                            name="discountPercentage" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Max Global Usage</label>
+                        <input type="number" min="1" [(ngModel)]="formData.maxGlobalUsage" name="maxGlobalUsage"
+                            class="form-control" />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Valid From</label>
+                        <input type="datetime-local" [(ngModel)]="formData.validFrom" name="validFrom"
+                            class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Valid Until</label>
+                        <input type="datetime-local" [(ngModel)]="formData.validUntil" name="validUntil"
+                            class="form-control" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Minimum Purchase Amount (₹)</label>
+                    <input type="number" min="0" [(ngModel)]="formData.minPurchaseAmount" name="minPurchaseAmount"
+                        class="form-control" />
+                </div>
+
+                <div class="form-group checkbox">
+                    <label>
+                        <input type="checkbox" [(ngModel)]="formData.isActive" name="isActive" />
+                        Active
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" (click)="hideForm()">Cancel</button>
+                    <button type="button" class="btn btn-primary"
+                        (click)="showCreateForm ? createCoupon() : updateCoupon()">
+                        {{ showCreateForm ? 'Create Coupon' : 'Update Coupon' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

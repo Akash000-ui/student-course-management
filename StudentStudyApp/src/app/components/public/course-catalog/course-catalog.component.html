@@ -1,0 +1,182 @@
+<div class="catalog-container">
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Explore Our Courses</h1>
+            <p class="hero-subtitle">Discover high-quality courses taught by industry experts. Sign in to enroll and
+                start learning!</p>
+            <div class="hero-actions">
+                <button class="btn btn-primary" (click)="navigateToSignUp()">
+                    <mat-icon>person_add</mat-icon>
+                    Get Started
+                </button>
+                <button class="btn btn-secondary" (click)="navigateToSignIn()">
+                    <mat-icon>login</mat-icon>
+                    Sign In
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filters Section -->
+    <section class="filters-section">
+        <div class="filters-container">
+            <!-- Search Bar -->
+            <div class="search-wrapper">
+                <mat-icon>search</mat-icon>
+                <input type="text" placeholder="Search courses..." [(ngModel)]="searchTerm"
+                    (ngModelChange)="onSearchChange()" class="search-input">
+            </div>
+
+            <!-- Category Filter -->
+            <div class="filter-group">
+                <mat-icon>category</mat-icon>
+                <select [(ngModel)]="selectedCategory" (change)="onFilterChange()" class="filter-select">
+                    <option value="">All Categories</option>
+                    <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
+                </select>
+            </div>
+
+            <!-- Difficulty Filter -->
+            <div class="filter-group">
+                <mat-icon>signal_cellular_alt</mat-icon>
+                <select [(ngModel)]="selectedDifficulty" (change)="onFilterChange()" class="filter-select">
+                    <option value="">All Levels</option>
+                    <option *ngFor="let difficulty of difficulties" [value]="difficulty">{{difficulty}}</option>
+                </select>
+            </div>
+
+            <!-- Sort By -->
+            <div class="filter-group">
+                <mat-icon>sort</mat-icon>
+                <select [(ngModel)]="selectedSortBy" (change)="onSortChange()" class="filter-select">
+                    <option value="latest">Latest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="title-asc">Title (A-Z)</option>
+                    <option value="title-desc">Title (Z-A)</option>
+                </select>
+            </div>
+
+            <!-- Clear Filters -->
+            <button class="btn-clear" (click)="clearFilters()"
+                *ngIf="selectedCategory || selectedDifficulty || searchTerm">
+                <mat-icon>clear</mat-icon>
+                Clear Filters
+            </button>
+        </div>
+    </section>
+
+    <!-- Loading State -->
+    <div class="loading-container" *ngIf="loading">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Loading courses...</p>
+    </div>
+
+    <!-- Error State -->
+    <div class="error-container" *ngIf="error && !loading">
+        <mat-icon class="error-icon">error_outline</mat-icon>
+        <p>{{error}}</p>
+        <button class="btn btn-primary" (click)="loadCourses()">
+            <mat-icon>refresh</mat-icon>
+            Retry
+        </button>
+    </div>
+
+    <!-- Courses Grid -->
+    <section class="courses-section" *ngIf="!loading && !error">
+        <div class="courses-grid" *ngIf="filteredCourses.length > 0">
+            <div class="course-card" *ngFor="let course of filteredCourses" (click)="viewCourseDetails(course.id)">
+                <!-- Course Thumbnail -->
+                <div class="course-thumbnail">
+                    <img [src]="course.thumbnailUrl || 'assets/default-course.jpg'" [alt]="course.title">
+                    <div class="course-overlay">
+                        <mat-icon>visibility</mat-icon>
+                        <span>Preview Course</span>
+                    </div>
+                </div>
+
+                <!-- Course Info -->
+                <div class="course-info">
+                    <div class="course-badges">
+                        <span class="badge badge-category">{{getCategoryName(course.categoryId)}}</span>
+                        <span class="badge badge-difficulty" [class]="'badge-' + course.difficulty.toLowerCase()">
+                            {{course.difficulty}}
+                        </span>
+                    </div>
+
+                    <h3 class="course-title">{{course.title}}</h3>
+
+                    <!-- Description with Read More -->
+                    <div class="course-description-wrapper">
+                        <p class="course-description" [class.expanded]="isDescriptionExpanded(course.id)">
+                            {{ isDescriptionExpanded(course.id) ? course.description : (course.description |
+                            slice:0:120) }}
+                            <span
+                                *ngIf="!isDescriptionExpanded(course.id) && shouldShowReadMore(course.description)">...</span>
+                        </p>
+                        <button *ngIf="shouldShowReadMore(course.description)" class="read-more-btn"
+                            (click)="toggleDescription(course.id, $event)">
+                            {{ isDescriptionExpanded(course.id) ? 'Read Less' : 'Read More' }}
+                            <mat-icon>{{ isDescriptionExpanded(course.id) ? 'expand_less' : 'expand_more' }}</mat-icon>
+                        </button>
+                    </div>
+
+                    <!-- Trainer Info -->
+                    <div class="trainer-info">
+                        <img [src]="course.profilePictureUrl || 'assets/default-avatar.png'" [alt]="course.trainerName"
+                            class="trainer-avatar">
+                        <div class="trainer-details">
+                            <span class="trainer-name">{{course.trainerName}}</span>
+                            <span class="trainer-field">{{course.fieldOfWork}}</span>
+                        </div>
+                    </div>
+
+                    <!-- Course Meta -->
+                    <div class="course-meta">
+                        <div class="meta-item">
+                            <mat-icon>videocam</mat-icon>
+                            <span>{{course.videoIds.length || 0}} videos</span>
+                        </div>
+                        <div class="meta-item">
+                            <mat-icon>language</mat-icon>
+                            <span>{{course.language}}</span>
+                        </div>
+                    </div>
+
+                    <!-- Locked Badge -->
+                    <div class="locked-badge">
+                        <mat-icon>lock</mat-icon>
+                        <span>Sign in to enroll</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" *ngIf="filteredCourses.length === 0">
+            <mat-icon>search_off</mat-icon>
+            <h3>No courses found</h3>
+            <p>Try adjusting your filters or search terms</p>
+            <button class="btn btn-primary" (click)="clearFilters()">
+                Clear Filters
+            </button>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="cta-section" *ngIf="!loading && filteredCourses.length > 0">
+        <div class="cta-content">
+            <h2>Ready to Start Learning?</h2>
+            <p>Create an account to access all courses and start your learning journey today!</p>
+            <div class="cta-actions">
+                <button class="btn btn-primary btn-lg" (click)="navigateToSignUp()">
+                    <mat-icon>person_add</mat-icon>
+                    Sign Up Now
+                </button>
+                <button class="btn btn-outline btn-lg" (click)="navigateToSignIn()">
+                    Already have an account? Sign In
+                </button>
+            </div>
+        </div>
+    </section>
+</div>

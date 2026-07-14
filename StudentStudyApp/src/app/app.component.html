@@ -1,0 +1,95 @@
+<!-- Navigation Bar -->
+<mat-toolbar color="primary" class="navbar">
+  <div class="nav-container">
+    <div class="nav-brand">
+      <mat-icon>school</mat-icon>
+      <span class="brand-text" routerLink="/">StudyHub</span>
+    </div>
+
+    <div class="nav-links">
+      <!-- Show Home button only when not logged in (public view) -->
+      <ng-container *ngIf="!isLoggedIn">
+        <button mat-button routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">
+          <mat-icon>home</mat-icon>
+          <span>Home</span>
+        </button>
+      </ng-container>
+      <button mat-button routerLink="/dashboard" routerLinkActive="active-link" *ngIf="isLoggedIn">
+        <mat-icon>dashboard</mat-icon>
+        <span>Dashboard</span>
+      </button>
+      <button mat-button routerLink="/admin" routerLinkActive="active-link" *ngIf="isLoggedIn && isAdmin">
+        <mat-icon>admin_panel_settings</mat-icon>
+        <span>Admin</span>
+      </button>
+
+      <!-- Profile Dropdown Menu for Logged In Users -->
+      <button mat-button [matMenuTriggerFor]="profileMenu" class="profile-nav-button" *ngIf="isLoggedIn">
+        <div class="profile-avatar">{{getUserInitials()}}</div>
+        <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
+      </button>
+      <mat-menu #profileMenu="matMenu" class="profile-dropdown">
+        <div class="profile-menu-header">
+          <div class="profile-menu-avatar">{{getUserInitials()}}</div>
+          <div class="profile-menu-info">
+            <span class="profile-menu-name">{{currentUser?.username}}</span>
+            <span class="profile-menu-email">{{currentUser?.email}}</span>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+        <button mat-menu-item routerLink="/profile">
+          <mat-icon>person</mat-icon>
+          <span>Edit Profile</span>
+        </button>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+      </mat-menu>
+
+      <button mat-button routerLink="/signin" routerLinkActive="active-link" *ngIf="!isLoggedIn">
+        <mat-icon>login</mat-icon>
+        <span>Sign In</span>
+      </button>
+      <button mat-raised-button color="accent" routerLink="/signup" routerLinkActive="active-link" *ngIf="!isLoggedIn">
+        <mat-icon>person_add</mat-icon>
+        <span>Sign Up</span>
+      </button>
+      <button mat-button (click)="logout()" *ngIf="isLoggedIn" class="logout-button">
+        <mat-icon>logout</mat-icon>
+        <span>Logout</span>
+      </button>
+    </div>
+  </div>
+</mat-toolbar>
+
+<!-- Main Content -->
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>StudyHub</h3>
+        <p>Your gateway to quality education and skill development.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <a routerLink="/">Home</a>
+        <a routerLink="/signin">Sign In</a>
+        <a routerLink="/signup">Sign Up</a>
+      </div>
+      <div class="footer-section">
+        <h4>Contact</h4>
+        <p>Email: info&#64;studyhub.com</p>
+        <p>Phone: +1 (555) 123-4567</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 StudyHub. All rights reserved.</p>
+    </div>
+  </div>
+</footer>

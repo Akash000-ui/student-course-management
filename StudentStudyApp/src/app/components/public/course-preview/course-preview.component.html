@@ -1,0 +1,212 @@
+<div class="preview-container">
+    <!-- Loading State -->
+    <div class="loading-container" *ngIf="loading">
+        <mat-spinner diameter="50"></mat-spinner>
+        <p>Loading course details...</p>
+    </div>
+
+    <!-- Error State -->
+    <div class="error-container" *ngIf="error && !loading">
+        <mat-icon class="error-icon">error_outline</mat-icon>
+        <h2>{{error}}</h2>
+        <p>The course you're looking for might have been removed or doesn't exist.</p>
+        <button class="btn btn-primary" (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+            Back to Courses
+        </button>
+    </div>
+
+    <!-- Course Preview -->
+    <div class="course-preview" *ngIf="course && !loading && !error">
+        <!-- Back Button -->
+        <button class="back-button" (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+            Back to Courses
+        </button>
+
+        <!-- Course Header -->
+        <div class="course-header">
+            <!-- Badges and Title -->
+            <div class="course-badges">
+                <span class="badge badge-category">{{categoryName || 'Category'}}</span>
+                <span class="badge badge-difficulty" [ngClass]="'badge-' + course.difficulty.toLowerCase()">
+                    {{course.difficulty}}
+                </span>
+            </div>
+            <h1 class="course-title">{{course.title}}</h1>
+
+            <!-- Course Thumbnail Image -->
+            <div class="header-image">
+                <img [src]="course.thumbnailUrl || 'assets/default-course.jpg'" [alt]="course.title">
+                <div class="image-overlay">
+                    <mat-icon>lock</mat-icon>
+                    <p>Sign in to unlock</p>
+                </div>
+            </div>
+
+            <!-- Description with Read More -->
+            <div class="description-wrapper">
+                <p class="course-description" [class.expanded]="isDescriptionExpanded">
+                    {{ isDescriptionExpanded ? course.description : (course.description | slice:0:200) }}
+                    <span *ngIf="!isDescriptionExpanded && shouldShowReadMore(course.description, 200)">...</span>
+                </p>
+                <button *ngIf="shouldShowReadMore(course.description, 200)" class="read-more-btn"
+                    (click)="toggleDescription()">
+                    {{ isDescriptionExpanded ? 'Read Less' : 'Read More' }}
+                    <mat-icon>{{ isDescriptionExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+                </button>
+            </div>
+
+            <!-- Course Stats -->
+            <div class="course-stats">
+                <div class="stat-item">
+                    <mat-icon>videocam</mat-icon>
+                    <span>{{course.videoIds.length}} Videos</span>
+                </div>
+                <div class="stat-item">
+                    <mat-icon>language</mat-icon>
+                    <span>{{course.language}}</span>
+                </div>
+                <div class="stat-item">
+                    <mat-icon>schedule</mat-icon>
+                    <span>Self-paced</span>
+                </div>
+            </div>
+
+            <!-- Enroll Button -->
+            <div class="enroll-section">
+                <button class="btn-enroll" (click)="navigateToSignIn()">
+                    <mat-icon>lock_open</mat-icon>
+                    Sign In to Enroll
+                </button>
+                <p class="enroll-note">
+                    <mat-icon>info</mat-icon>
+                    You need to sign in to access course content and enroll
+                </p>
+            </div>
+        </div>
+
+        <!-- Course Details -->
+        <div class="course-details">
+            <!-- Trainer Section -->
+            <div class="detail-section trainer-section">
+                <h2>
+                    <mat-icon>person</mat-icon>
+                    Meet Your Instructor
+                </h2>
+                <div class="trainer-card">
+                    <img [src]="course.profilePictureUrl || 'assets/default-avatar.png'" [alt]="course.trainerName"
+                        class="trainer-image">
+                    <div class="trainer-info">
+                        <h3>{{course.trainerName}}</h3>
+                        <p class="trainer-field">{{course.fieldOfWork}}</p>
+                        <p class="trainer-experience">
+                            <mat-icon>work</mat-icon>
+                            {{course.experience}}
+                        </p>
+
+                        <!-- Trainer Bio with Read More -->
+                        <div class="bio-wrapper">
+                            <p class="trainer-bio" [class.expanded]="isTrainerBioExpanded">
+                                {{ isTrainerBioExpanded ? course.trainerBio : (course.trainerBio | slice:0:150) }}
+                                <span
+                                    *ngIf="!isTrainerBioExpanded && shouldShowReadMore(course.trainerBio, 150)">...</span>
+                            </p>
+                            <button *ngIf="shouldShowReadMore(course.trainerBio, 150)" class="read-more-btn"
+                                (click)="toggleTrainerBio()">
+                                {{ isTrainerBioExpanded ? 'Read Less' : 'Read More' }}
+                                <mat-icon>{{ isTrainerBioExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+                            </button>
+                        </div>
+
+                        <a *ngIf="course.linkedinProfile" [href]="course.linkedinProfile" target="_blank"
+                            class="linkedin-link">
+                            <mat-icon>link</mat-icon>
+                            LinkedIn Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course Content -->
+            <div class="detail-section">
+                <h2>
+                    <mat-icon>list</mat-icon>
+                    Course Content
+                </h2>
+                <div class="content-info">
+                    <div class="content-item">
+                        <mat-icon>play_circle_outline</mat-icon>
+                        <div>
+                            <h4>Video Lessons</h4>
+                            <p>This course contains {{course.videoIds.length}} video lessons covering all topics in
+                                detail.</p>
+                        </div>
+                    </div>
+                    <div class="content-item">
+                        <mat-icon>quiz</mat-icon>
+                        <div>
+                            <h4>Interactive Learning</h4>
+                            <p>Engage with practical examples and hands-on exercises.</p>
+                        </div>
+                    </div>
+                    <div class="content-item">
+                        <mat-icon>verified</mat-icon>
+                        <div>
+                            <h4>Certificate of Completion</h4>
+                            <p>Earn a certificate upon completing the course successfully.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="locked-content">
+                    <mat-icon>lock</mat-icon>
+                    <p>Full course content is available after enrollment</p>
+                </div>
+            </div>
+
+            <!-- What You'll Learn -->
+            <div class="detail-section">
+                <h2>
+                    <mat-icon>school</mat-icon>
+                    What You'll Learn
+                </h2>
+                <div class="learning-outcomes">
+                    <div class="outcome-item">
+                        <mat-icon>check_circle</mat-icon>
+                        <span>Master the fundamentals and advanced concepts</span>
+                    </div>
+                    <div class="outcome-item">
+                        <mat-icon>check_circle</mat-icon>
+                        <span>Build real-world projects and applications</span>
+                    </div>
+                    <div class="outcome-item">
+                        <mat-icon>check_circle</mat-icon>
+                        <span>Learn from industry expert with {{course.experience}}</span>
+                    </div>
+                    <div class="outcome-item">
+                        <mat-icon>check_circle</mat-icon>
+                        <span>Access course materials anytime, anywhere</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="cta-section">
+            <div class="cta-content">
+                <h2>Ready to Start Learning?</h2>
+                <p>Join thousands of students and start your learning journey today!</p>
+                <div class="cta-actions">
+                    <button class="btn btn-primary btn-lg" (click)="navigateToSignUp()">
+                        <mat-icon>person_add</mat-icon>
+                        Create Account
+                    </button>
+                    <button class="btn btn-outline btn-lg" (click)="navigateToSignIn()">
+                        <mat-icon>login</mat-icon>
+                        Sign In
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

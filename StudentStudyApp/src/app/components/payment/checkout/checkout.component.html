@@ -1,0 +1,114 @@
+<div class="checkout-container">
+    <div class="checkout-header">
+        <h1>Checkout</h1>
+        <button class="close-btn" (click)="cancelPayment()" title="Go back">
+            <span>&times;</span>
+        </button>
+    </div>
+
+    <!-- Error Messages -->
+    <div *ngIf="error" class="alert alert-danger">
+        <strong>Error:</strong> {{ error }}
+    </div>
+
+    <!-- Success Message -->
+    <div *ngIf="successMessage" class="alert alert-success">
+        <strong>Success!</strong> {{ successMessage }}
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-spinner">
+        <p>Loading course details...</p>
+    </div>
+
+    <!-- Course Details -->
+    <div *ngIf="!isLoading && course" class="checkout-content">
+        <div class="course-section">
+            <h2>Course Details</h2>
+            <div class="course-card">
+                <div class="course-image">
+                    <img [src]="course.thumbnailUrl" [alt]="course.title" class="course-thumbnail" />
+                </div>
+                <div class="course-info">
+                    <h3>{{ course.title }}</h3>
+                    <p class="trainer-name">By: {{ course.trainerName }}</p>
+                    <p class="course-description">{{ course.description }}</p>
+                    <div class="course-meta">
+                        <span class="badge" [ngClass]="'difficulty-' + course.difficulty.toLowerCase()">
+                            {{ course.difficulty }}
+                        </span>
+                        <span class="badge language">{{ course.language }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coupon Section -->
+        <div class="coupon-section">
+            <h2>Apply Coupon (Optional)</h2>
+            <div class="coupon-input-group">
+                <input type="text" placeholder="Enter coupon code" [(ngModel)]="couponCode"
+                    [disabled]="couponApplied || couponLoading" class="coupon-input" />
+                <button *ngIf="!couponApplied" (click)="applyCoupon()" [disabled]="couponLoading || !couponCode.trim()"
+                    class="btn btn-primary">
+                    {{ couponLoading ? 'Validating...' : 'Apply' }}
+                </button>
+                <button *ngIf="couponApplied" (click)="removeCoupon()" class="btn btn-secondary">
+                    Remove
+                </button>
+            </div>
+            <div *ngIf="couponError" class="coupon-error">
+                {{ couponError }}
+            </div>
+            <div *ngIf="couponApplied" class="coupon-success">
+                ✓ Coupon applied successfully!
+            </div>
+        </div>
+
+        <!-- Price Breakdown -->
+        <div class="price-section">
+            <h2>Price Breakdown</h2>
+            <div class="price-details">
+                <div class="price-row">
+                    <span>Original Price:</span>
+                    <span class="price">₹{{ coursePrice }}</span>
+                </div>
+                <div *ngIf="couponDiscount > 0" class="price-row discount">
+                    <span>Discount:</span>
+                    <span class="discount-amount">-₹{{ couponDiscount }}</span>
+                </div>
+                <div class="price-row total">
+                    <span>Total Amount:</span>
+                    <span class="price-total">₹{{ finalPrice }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Button -->
+        <div class="payment-section">
+            <button (click)="initiatePayment()" [disabled]="paymentLoading || paymentInitiated"
+                class="btn btn-success pay-btn">
+                <span *ngIf="!paymentLoading && !paymentInitiated">
+                    Proceed to Pay ₹{{ finalPrice }}
+                </span>
+                <span *ngIf="paymentLoading">
+                    <span class="spinner"></span> Initializing Payment...
+                </span>
+                <span *ngIf="paymentInitiated">
+                    <span class="spinner"></span> Opening Razorpay...
+                </span>
+            </button>
+            <p class="payment-info">
+                <i>✓ Secure payment via Razorpay</i>
+            </p>
+        </div>
+
+        <!-- Terms -->
+        <div class="terms-section">
+            <p class="terms">
+                By proceeding, you agree to our Terms of Service and Privacy Policy.
+                Your payment is secured and encrypted.
+            </p>
+        </div>
+    </div>
+</div>

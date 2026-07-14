@@ -1,0 +1,169 @@
+<div class="order-history-container">
+    <div class="history-header">
+        <h1>My Orders</h1>
+        <button class="btn-back" (click)="goBack()">← Back to Dashboard</button>
+    </div>
+
+    <!-- Error Messages -->
+    <div *ngIf="error" class="alert alert-danger">
+        <strong>Error:</strong> {{ error }}
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-spinner">
+        <p>Loading your orders...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!isLoading && orders.length === 0" class="empty-state">
+        <div class="empty-icon">📦</div>
+        <h3>No Orders Yet</h3>
+        <p>You haven't purchased any courses yet. Start learning today!</p>
+        <button class="btn btn-primary" (click)="router.navigate(['/courses'])">
+            Explore Courses
+        </button>
+    </div>
+
+    <!-- Orders Table -->
+    <div *ngIf="!isLoading && orders.length > 0" class="orders-section">
+        <div class="orders-count">Total Orders: {{ orders.length }}</div>
+
+        <div class="table-responsive">
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Course</th>
+                        <th>Amount</th>
+                        <th>Discount</th>
+                        <th>Payment Status</th>
+                        <th>Order Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let order of orders" [class]="'order-row status-' + order.paymentStatus.toLowerCase()">
+                        <td class="order-id">{{ order.id.substring(0, 8) }}...</td>
+                        <td class="course-name">{{ order.courseId }}</td>
+                        <td class="original-price">₹{{ order.originalPrice }}</td>
+                        <td class="discount-amount" *ngIf="order.discountAmount > 0">
+                            -₹{{ order.discountAmount }}
+                            <span class="coupon-badge" *ngIf="order.couponCode">({{ order.couponCode }})</span>
+                        </td>
+                        <td class="discount-amount" *ngIf="order.discountAmount === 0">—</td>
+                        <td>
+                            <span [class]="'badge ' + getPaymentStatusClass(order.paymentStatus)">
+                                {{ order.paymentStatus }}
+                            </span>
+                        </td>
+                        <td class="order-date">{{ formatDate(order.createdAt) }}</td>
+                        <td class="actions">
+                            <button class="btn-action view-receipt" (click)="viewReceipt(order)" title="View Receipt">
+                                📄
+                            </button>
+                            <button class="btn-action download" (click)="downloadReceipt(order)"
+                                title="Download Receipt">
+                                ⬇️
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Receipt Modal -->
+<div *ngIf="showReceiptModal && selectedOrder" class="modal-overlay" (click)="closeReceiptModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+            <h2>Payment Receipt</h2>
+            <button class="close-btn" (click)="closeReceiptModal()">×</button>
+        </div>
+
+        <div class="modal-body">
+            <div class="receipt">
+                <div class="receipt-header">
+                    <h3>Order Receipt</h3>
+                    <p class="receipt-date">{{ formatDate(selectedOrder.completedAt) }}</p>
+                </div>
+
+                <div class="receipt-section">
+                    <h4>Order Details</h4>
+                    <div class="receipt-item">
+                        <span class="label">Order ID:</span>
+                        <span class="value">{{ selectedOrder.id }}</span>
+                    </div>
+                    <div class="receipt-item">
+                        <span class="label">Payment ID:</span>
+                        <span class="value">{{ selectedOrder.razorpayPaymentId }}</span>
+                    </div>
+                    <div class="receipt-item">
+                        <span class="label">Transaction ID:</span>
+                        <span class="value">{{ selectedOrder.razorpayOrderId }}</span>
+                    </div>
+                </div>
+
+                <div class="receipt-section">
+                    <h4>Course Information</h4>
+                    <div class="receipt-item">
+                        <span class="label">Course ID:</span>
+                        <span class="value">{{ selectedOrder.courseId }}</span>
+                    </div>
+                    <div class="receipt-item">
+                        <span class="label">Enrollment ID:</span>
+                        <span class="value">{{ selectedOrder.enrollmentId }}</span>
+                    </div>
+                </div>
+
+                <div class="receipt-section">
+                    <h4>Price Details</h4>
+                    <table class="price-table">
+                        <tr>
+                            <td class="label">Original Price:</td>
+                            <td class="value">₹{{ selectedOrder.originalPrice }}</td>
+                        </tr>
+                        <tr *ngIf="selectedOrder.discountAmount > 0">
+                            <td class="label">Coupon Discount:</td>
+                            <td class="value discount">-₹{{ selectedOrder.discountAmount }}</td>
+                        </tr>
+                        <tr *ngIf="selectedOrder.couponCode">
+                            <td class="label">Coupon Code:</td>
+                            <td class="value">{{ selectedOrder.couponCode }}</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td class="label">Amount Paid:</td>
+                            <td class="value">₹{{ selectedOrder.finalAmount }}</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="receipt-section">
+                    <h4>Payment Status</h4>
+                    <div class="receipt-item">
+                        <span class="label">Status:</span>
+                        <span [class]="'value badge ' + getPaymentStatusClass(selectedOrder.paymentStatus)">
+                            {{ selectedOrder.paymentStatus }}
+                        </span>
+                    </div>
+                    <div class="receipt-item">
+                        <span class="label">Order Status:</span>
+                        <span [class]="'value badge ' + getOrderStatusClass(selectedOrder.orderStatus)">
+                            {{ selectedOrder.orderStatus }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="receipt-footer">
+                    <p>Thank you for your purchase! You now have access to this course.</p>
+                    <p class="timestamp">Receipt Generated: {{ formatDate(selectedOrder.completedAt) }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="closeReceiptModal()">Close</button>
+            <button class="btn btn-primary" (click)="downloadReceipt(selectedOrder)">Download PDF</button>
+        </div>
+    </div>
+</div>

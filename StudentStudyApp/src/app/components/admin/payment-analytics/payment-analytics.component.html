@@ -1,0 +1,186 @@
+<div class="payment-analytics-container">
+    <div class="header">
+        <h1>Payment Analytics</h1>
+        <div class="header-actions">
+            <button class="btn btn-secondary" (click)="refresh()">🔄 Refresh</button>
+            <button class="btn btn-primary" (click)="exportReport()">📊 Export Report</button>
+        </div>
+    </div>
+
+    <!-- Error Alert -->
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-spinner">
+        <p>Loading analytics...</p>
+    </div>
+
+    <div *ngIf="!isLoading" class="analytics-content">
+        <!-- KPI Cards -->
+        <div class="kpi-cards">
+            <div class="kpi-card">
+                <div class="kpi-value">{{ formatCurrency(totalRevenue) }}</div>
+                <div class="kpi-label">Total Revenue</div>
+                <div class="kpi-trend">{{ getRevenueTrend() }}</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">{{ totalOrders }}</div>
+                <div class="kpi-label">Total Orders</div>
+                <div class="kpi-trend">📦</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">{{ formatCurrency(averageOrderValue) }}</div>
+                <div class="kpi-label">Avg Order Value</div>
+                <div class="kpi-stat">per transaction</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">{{ formatCurrency(totalDiscount) }}</div>
+                <div class="kpi-label">Discounts Given</div>
+                <div class="kpi-stat">via coupons</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value">{{ formatPercentage(failureRate) }}</div>
+                <div class="kpi-label">Failure Rate</div>
+                <div class="kpi-trend">{{ getPerformanceRating() }}</div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="charts-section">
+            <!-- Daily Revenue Chart -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>Daily Revenue</h3>
+                    <div class="chart-controls">
+                        <button *ngFor="let period of ['7days', '30days', '90days']"
+                            [class.active]="selectedPeriod === period" (click)="changePeriod(period)"
+                            class="period-btn">
+                            {{ period === '7days' ? '7D' : period === '30days' ? '30D' : '90D' }}
+                        </button>
+                    </div>
+                </div>
+                <div class="chart-placeholder">
+                    <svg *ngIf="dailyRevenueData.length > 0" class="line-chart" viewBox="0 0 100 100"
+                        preserveAspectRatio="none">
+                        <polyline
+                            [attr.points]="dailyRevenueData.map((d, i) => i + ',' + (100 - ((d.revenue || 0) / (totalRevenue / dailyRevenueData.length * 2)) * 100)).join(' ')"
+                            fill="none" stroke="#3399cc" stroke-width="0.5" />
+                    </svg>
+                    <div *ngIf="!dailyRevenueData.length" class="no-data">No data available</div>
+                </div>
+            </div>
+
+            <!-- Payment Status Distribution -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3>Payment Status Distribution</h3>
+                </div>
+                <div class="payment-status-list">
+                    <div *ngFor="let status of paymentStatusChart?.labels; let i = index" class="status-item">
+                        <div class="status-bar">
+                            <div class="status-fill"
+                                [style.width.%]="(paymentStatusChart?.data[i] / (paymentStatusChart?.data | slice:0:paymentStatusChart?.data.length | reduce: (a, b) => a + b) * 100)"
+                                [style.background-color]="paymentStatusChart?.colors[i]"></div>
+                        </div>
+                        <div class="status-label">{{ status }}: {{ paymentStatusChart?.data[i] }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tables Section -->
+        <div class="tables-section">
+            <!-- Top Courses -->
+            <div class="table-card">
+                <h3>Top Selling Courses</h3>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Course ID</th>
+                                <th>Orders</th>
+                                <th>Revenue</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let course of topCourses">
+                                <td>{{ course.courseId }}</td>
+                                <td>{{ course.orderCount }}</td>
+                                <td>{{ formatCurrency(course.totalRevenue) }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Most Used Coupons -->
+            <div class="table-card">
+                <h3>Most Used Coupons</h3>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Discount %</th>
+                                <th>Usage Count</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let coupon of mostUsedCoupons">
+                                <td class="coupon-code">{{ coupon.couponCode }}</td>
+                                <td>{{ coupon.discountPercentage }}%</td>
+                                <td><span class="badge badge-info">{{ coupon.usageCount }}</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coupon Statistics -->
+        <div class="stats-card">
+            <h3>Coupon Statistics</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-label">Active Coupons</span>
+                    <span class="stat-value">{{ couponStats?.activeCoupons || 0 }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Total Coupons</span>
+                    <span class="stat-value">{{ couponStats?.totalCoupons || 0 }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Total Usages</span>
+                    <span class="stat-value">{{ couponStats?.totalCouponUsages || 0 }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Unique Users</span>
+                    <span class="stat-value">{{ couponStats?.uniqueUsersWithCoupons || 0 }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Utilization Rate</span>
+                    <span class="stat-value">{{ formatPercentage(couponStats?.couponUtilizationRate || 0) }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Failure Analysis -->
+        <div class="stats-card warning">
+            <h3>Payment Failure Analysis</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-label">Failed Orders</span>
+                    <span class="stat-value">{{ failureStats?.failedOrderCount || 0 }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Failure Rate</span>
+                    <span class="stat-value">{{ formatPercentage(failureStats?.failureRate || 0) }}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Lost Revenue</span>
+                    <span class="stat-value">{{ formatCurrency(failureStats?.totalLostRevenue || 0) }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

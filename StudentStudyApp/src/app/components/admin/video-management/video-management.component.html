@@ -1,0 +1,274 @@
+<div class="video-management-container">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-content">
+      <button mat-icon-button (click)="goBack()" class="back-button">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div class="header-text">
+        <h1 class="page-title">Video Management</h1>
+        <p class="page-subtitle" *ngIf="course">
+          Managing videos for: <strong>{{ course.title }}</strong>
+        </p>
+      </div>
+    </div>
+
+    <button mat-raised-button color="primary" (click)="showCreateForm()" class="add-video-btn" *ngIf="!showVideoForm">
+      <mat-icon>add</mat-icon>
+      Add Video
+    </button>
+  </div>
+
+  <!-- Video Form -->
+  <div class="video-form-container" *ngIf="showVideoForm">
+    <mat-card class="upload-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>video_library</mat-icon>
+          {{ editingVideo ? 'Edit Video' : 'Add New Video' }}
+        </mat-card-title>
+        <mat-card-subtitle>
+          {{ editingVideo ? 'Update video details' : 'Add a new YouTube video to this course' }}
+        </mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <form [formGroup]="videoForm" (ngSubmit)="onSubmit()" class="video-form">
+          <div class="form-section">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Video Title</mat-label>
+              <input matInput formControlName="title" placeholder="Enter video title">
+              <mat-error *ngIf="videoForm.get('title')?.hasError('required')">
+                Video title is required
+              </mat-error>
+              <mat-error *ngIf="videoForm.get('title')?.hasError('minlength')">
+                Title must be at least 3 characters long
+              </mat-error>
+              <mat-error *ngIf="videoForm.get('title')?.hasError('maxlength')">
+                Title must not exceed 100 characters
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Video Description</mat-label>
+              <textarea matInput formControlName="description" placeholder="Enter video description (optional)"
+                rows="4">
+              </textarea>
+              <!-- Removed maxlength limitation -->
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>YouTube URL</mat-label>
+              <input matInput formControlName="videoUrl" placeholder="https://www.youtube.com/watch?v=..." type="url">
+              <mat-hint>Enter a valid YouTube URL</mat-hint>
+              <mat-error *ngIf="videoForm.get('videoUrl')?.hasError('required')">
+                YouTube URL is required
+              </mat-error>
+              <mat-error *ngIf="videoForm.get('videoUrl')?.hasError('invalidYouTubeUrl')">
+                Please enter a valid YouTube URL
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Position (Order)</mat-label>
+              <input matInput type="number" formControlName="position" min="1"
+                [max]="videos.length + (editingVideo ? 0 : 1)" placeholder="1">
+              <mat-hint>1 = first, {{ videos.length + (editingVideo ? 0 : 1) }} = last</mat-hint>
+            </mat-form-field>
+
+            <!-- Google Drive Links Section -->
+            <div class="file-upload-section">
+              <h3 class="section-title">
+                <mat-icon>cloud</mat-icon>
+                Google Drive Resources (Optional)
+              </h3>
+
+              <!-- Notes File Google Drive Link -->
+              <div class="drive-input-group">
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Notes File URL</mat-label>
+                  <input matInput formControlName="driveNotesFileLink"
+                    placeholder="https://drive.google.com/file/d/.../view">
+                  <mat-hint>Paste the shareable Google Drive link for notes file</mat-hint>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Notes File Name</mat-label>
+                  <input matInput formControlName="driveNotesFileName" placeholder="e.g., Chapter 1 Notes.pdf">
+                  <mat-hint>Display name for the notes file</mat-hint>
+                </mat-form-field>
+              </div>
+
+
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="form-actions">
+            <button type="button" mat-stroked-button (click)="cancelForm()" [disabled]="saving">
+              Cancel
+            </button>
+            <button type="submit" mat-raised-button color="primary" [disabled]="!canSubmit">
+              <mat-icon *ngIf="saving">hourglass_empty</mat-icon>
+              <mat-icon *ngIf="!saving">{{ editingVideo ? 'update' : 'add' }}</mat-icon>
+              {{ saving ? 'Saving...' : (editingVideo ? 'Update Video' : 'Add Video') }}
+            </button>
+          </div>
+        </form>
+
+        <!-- Code Files Section (Outside Form) -->
+        <div class="code-files-section" *ngIf="showVideoForm">
+          <h4 class="section-title">
+            📁 Code Files (Optional)
+          </h4>
+
+          <div class="code-files-container">
+            <div class="code-file-row" *ngFor="let link of codeFileLinks; let i = index">
+              <div class="code-input-group">
+                <label>Code File URL</label>
+                <input type="text" [(ngModel)]="codeFileLinks[i]" (ngModelChange)="updateFormArrays()"
+                  placeholder="https://drive.google.com/file/d/.../view" class="code-url-input">
+              </div>
+
+              <div class="code-input-group">
+                <label>File Name</label>
+                <input type="text" [(ngModel)]="codeFileNames[i]" (ngModelChange)="updateFormArrays()"
+                  placeholder="e.g., main.java" class="code-name-input">
+              </div>
+
+              <button type="button" (click)="removeCodeFile(i)" class="remove-btn">
+                Remove
+              </button>
+            </div>
+
+            <button type="button" (click)="addCodeFile()" class="add-btn">
+              Add Code File
+            </button>
+          </div>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Videos List -->
+  <div class="videos-section">
+    <div class="section-header">
+      <h2>Course Videos</h2>
+      <p>Manage and organize videos for this course</p>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-section" *ngIf="loading">
+      <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+      <p>Loading videos...</p>
+    </div>
+
+    <!-- Videos List (smooth drag & drop) -->
+    <div class="videos-list" *ngIf="!loading && videos.length > 0" cdkDropList [cdkDropListData]="videos"
+      [cdkDropListOrientation]="'vertical'" (cdkDropListDropped)="drop($event)">
+      <mat-card class="video-card" *ngFor="let video of videos; let i = index; trackBy: trackById" cdkDrag
+        [cdkDragStartDelay]="100">
+        <mat-card-header>
+          <div class="thumb-embed" *ngIf="video.videoUrl; else noPreview">
+            <iframe [src]="getYouTubeEmbedUrl(video.videoUrl)" title="YouTube video preview" frameborder="0"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+            </iframe>
+          </div>
+          <ng-template #noPreview>
+            <div class="thumb-embed no-preview">
+              <mat-icon>image_not_supported</mat-icon>
+            </div>
+          </ng-template>
+          <div class="header-main">
+            <mat-card-title>
+              <span class="position-badge">#{{ (video.position ?? (i + 1)) }}</span>
+              {{ video.title }}
+            </mat-card-title>
+            <mat-card-subtitle>{{ video.description || 'No description' }}</mat-card-subtitle>
+          </div>
+          <div class="card-header-right">
+            <button mat-icon-button cdkDragHandle class="drag-handle" matTooltip="Drag to reorder"
+              aria-label="Drag to reorder">
+              <mat-icon>drag_indicator</mat-icon>
+            </button>
+          </div>
+        </mat-card-header>
+
+        <mat-card-content>
+          <div class="video-meta">
+            <span class="created-date">Created: {{ video.createdAt | date:'short' }}</span>
+            <span class="updated-date" *ngIf="video.updatedAt !== video.createdAt">
+              Updated: {{ video.updatedAt | date:'short' }}
+            </span>
+          </div>
+
+          <!-- File Attachments Display -->
+          <div class="file-attachments"
+            *ngIf="video.driveNotesFileLink || (video.driveCodeFileLinks && video.driveCodeFileLinks.length > 0)">
+            <h4 class="attachments-title">
+              <mat-icon>attach_file</mat-icon>
+              Attachments
+            </h4>
+
+            <!-- Notes File -->
+            <div class="file-item" *ngIf="video.driveNotesFileLink">
+              <mat-icon class="file-icon">description</mat-icon>
+              <span class="file-name">{{ video.driveNotesFileName || 'Notes' }}</span>
+              <button mat-icon-button (click)="openGoogleDriveFile(video.driveNotesFileLink)" matTooltip="Open Notes">
+                <mat-icon>open_in_new</mat-icon>
+              </button>
+            </div>
+
+            <!-- Code Files -->
+            <div class="file-item" *ngFor="let codeLink of video.driveCodeFileLinks; let j = index">
+              <mat-icon class="file-icon">code</mat-icon>
+              <span class="file-name">{{ video.driveCodeFileNames?.[j] || 'Code File ' + (j + 1) }}</span>
+              <button mat-icon-button (click)="openGoogleDriveFile(codeLink)" matTooltip="Open Code File">
+                <mat-icon>open_in_new</mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions>
+          <button mat-icon-button color="primary" (click)="editVideo(video)" matTooltip="Edit Video">
+            <mat-icon>edit</mat-icon>
+          </button>
+
+          <button mat-icon-button color="warn" (click)="deleteVideo(video)" matTooltip="Delete Video">
+            <mat-icon>delete</mat-icon>
+          </button>
+
+          <a mat-icon-button [href]="video.videoUrl" target="_blank" matTooltip="Open in YouTube">
+            <mat-icon>open_in_new</mat-icon>
+          </a>
+        </mat-card-actions>
+        <!-- Drag placeholder and preview -->
+        <ng-template cdkDragPlaceholder>
+          <mat-card class="video-card placeholder">
+            <mat-card-content>Moving “{{ video.title }}”...</mat-card-content>
+          </mat-card>
+        </ng-template>
+        <ng-template cdkDragPreview>
+          <mat-card class="video-card preview">
+            <mat-card-content>{{ video.title }}</mat-card-content>
+          </mat-card>
+        </ng-template>
+      </mat-card>
+    </div>
+
+    <!-- No Videos Message -->
+    <div class="no-videos" *ngIf="!loading && videos.length === 0">
+      <mat-icon>video_library</mat-icon>
+      <h3>No videos yet</h3>
+      <p>Start by adding your first video to this course.</p>
+      <button mat-raised-button color="primary" (click)="showCreateForm()">
+        <mat-icon>add</mat-icon>
+        Add First Video
+      </button>
+    </div>
+  </div>
+</div>
