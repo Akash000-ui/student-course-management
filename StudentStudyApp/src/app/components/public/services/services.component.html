@@ -1,0 +1,30 @@
+<section class="page-hero">
+  <div class="hero-copy vm-reveal">
+    <span class="eyebrow">Our Services</span>
+    <h1>Software training, project engineering, internships, and real-time development</h1>
+    <p>We operate at the intersection of software development, AI consulting, corporate skill development, internships, and project engineering.</p>
+  </div>
+</section>
+
+<section class="service-grid">
+  <article class="vm-card-lift" *ngFor="let service of services" [ngClass]="service.theme">
+    <div class="service-media">
+      <img [src]="service.image" [alt]="service.title + ' service visual'" loading="lazy">
+    </div>
+    <span>{{service.tag}}</span>
+    <h2>{{service.title}}</h2>
+    <p>{{service.text}}</p>
+    <a routerLink="/contact">Learn More</a>
+  </article>
+</section>
+
+<section class="service-band">
+  <div>
+    <h2>Need training or a project plan?</h2>
+    <p>Tell us your course, internship, academic project, IEEE project, or business software requirement and our team will guide the next steps.</p>
+  </div>
+  <button mat-raised-button routerLink="/contact">
+    <mat-icon>call</mat-icon>
+    <span>Request Callback</span>
+  </button>
+</section>

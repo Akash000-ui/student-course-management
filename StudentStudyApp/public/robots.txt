@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /profile
+Disallow: /course/
+Disallow: /payment/
+Disallow: /signin
+Disallow: /signup
+Disallow: /forgot-password
+
+Sitemap: https://www.voidmainacademy.com/sitemap.xml

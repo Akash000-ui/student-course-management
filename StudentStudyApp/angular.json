@@ -41,14 +41,16 @@
             ],
             "scripts": [],
             "outputMode": "static",
-            "prerender": false
+            "optimization": {
+              "fonts": false
+            }
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "1500kB",
+                  "maximumWarning": "1600kB",
                   "maximumError": "2MB"
                 },
                 {

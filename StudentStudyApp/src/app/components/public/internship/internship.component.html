@@ -1,0 +1,40 @@
+<section class="page-hero">
+  <div class="hero-copy vm-reveal">
+    <span class="eyebrow">Internship Programs Hyderabad</span>
+    <h1>Embark Your internship with us</h1>
+    <p>Gain hands-on experience in your chosen field, work on real-world projects, and collaborate with a professional team.</p>
+  </div>
+</section>
+
+<section class="benefits-section">
+  <article class="benefit-card vm-card-lift" *ngFor="let benefit of benefits">
+    <img [src]="benefit.image" [alt]="benefit.title + ' internship visual'" loading="lazy">
+    <h3>{{benefit.title}}</h3>
+  </article>
+</section>
+
+<section class="internship-section">
+  <div class="section-heading">
+    <h2>Start Your Industry-Oriented Internship</h2>
+    <p>Our internships give learners structured exposure to real workflows, task planning, implementation, reporting, team collaboration, and professional communication.</p>
+  </div>
+  <div class="process-grid">
+    <article class="vm-card-lift" *ngFor="let item of process; let i = index">
+      <span>{{i + 1}}</span>
+      <h3>{{item.title}}</h3>
+      <p>{{item.text}}</p>
+    </article>
+  </div>
+</section>
+
+<section class="application-band">
+  <div>
+    <span class="eyebrow">Internship Application</span>
+    <h2>Tell us about your interests</h2>
+    <p>Our team will contact you about availability, duration, fees if applicable, and next steps.</p>
+  </div>
+  <a mat-raised-button href="https://wa.me/917989743392" target="_blank" rel="noopener">
+    <mat-icon>chat</mat-icon>
+    <span>Apply on WhatsApp</span>
+  </a>
+</section>

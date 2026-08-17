@@ -2,9 +2,9 @@
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="hero-content">
-            <h1 class="hero-title">Explore Our Courses</h1>
-            <p class="hero-subtitle">Discover high-quality courses taught by industry experts. Sign in to enroll and
-                start learning!</p>
+            <span class="catalog-eyebrow">VOIDMAIN ACADEMY courses</span>
+            <h1 class="hero-title">Software courses in Dilsukhnagar with practical labs and project mentoring</h1>
+            <p class="hero-subtitle">Learn Java Full Stack, Python Full Stack, Data Science, AI, Data Analytics, Web Technologies, SAP, and Tally through industry-oriented online and classroom programs.</p>
             <div class="hero-actions">
                 <button class="btn btn-primary" (click)="navigateToSignUp()">
                     <mat-icon>person_add</mat-icon>
@@ -15,6 +15,23 @@
                     Sign In
                 </button>
             </div>
+        </div>
+    </section>
+
+    <section class="course-family-section">
+        <div class="family-header">
+            <h2>Popular Course Families</h2>
+            <p>Choose a career-focused learning path with trainer support, assignments, live project exposure, and guidance for interviews or academic implementation.</p>
+        </div>
+        <div class="family-grid">
+            <article class="family-card vm-card-lift" *ngFor="let family of courseFamilies" [ngClass]="family.theme">
+                <div class="family-media">
+                    <img [src]="family.image" [alt]="family.title + ' course visual'" loading="lazy">
+                </div>
+                <span>{{family.tag}}</span>
+                <h3>{{family.title}}</h3>
+                <p>{{family.description}}</p>
+            </article>
         </div>
     </section>
 
@@ -85,10 +102,10 @@
     <!-- Courses Grid -->
     <section class="courses-section" *ngIf="!loading && !error">
         <div class="courses-grid" *ngIf="filteredCourses.length > 0">
-            <div class="course-card" *ngFor="let course of filteredCourses" (click)="viewCourseDetails(course.id)">
+            <div class="course-card vm-card-lift" *ngFor="let course of filteredCourses" [ngClass]="getCourseTheme(course)" (click)="viewCourseDetails(course.id)">
                 <!-- Course Thumbnail -->
                 <div class="course-thumbnail">
-                    <img [src]="course.thumbnailUrl || 'assets/default-course.jpg'" [alt]="course.title">
+                    <img [src]="getCourseImage(course)" [alt]="course.title + ' course visual'" loading="lazy">
                     <div class="course-overlay">
                         <mat-icon>visibility</mat-icon>
                         <span>Preview Course</span>
@@ -123,8 +140,11 @@
 
                     <!-- Trainer Info -->
                     <div class="trainer-info">
-                        <img [src]="course.profilePictureUrl || 'assets/default-avatar.png'" [alt]="course.trainerName"
+                        <img *ngIf="course.profilePictureUrl" [src]="course.profilePictureUrl" [alt]="course.trainerName" loading="lazy"
                             class="trainer-avatar">
+                        <div *ngIf="!course.profilePictureUrl" class="trainer-avatar trainer-avatar-fallback">
+                            {{(course.trainerName || 'VT').charAt(0)}}
+                        </div>
                         <div class="trainer-details">
                             <span class="trainer-name">{{course.trainerName}}</span>
                             <span class="trainer-field">{{course.fieldOfWork}}</span>

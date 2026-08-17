@@ -1,29 +1,47 @@
-<!-- Navigation Bar -->
-<mat-toolbar color="primary" class="navbar">
+<mat-toolbar class="navbar">
   <div class="nav-container">
-    <div class="nav-brand">
-      <mat-icon>school</mat-icon>
-      <span class="brand-text" routerLink="/">StudyHub</span>
-    </div>
+    <a class="nav-brand" routerLink="/" aria-label="VOIDMAIN ACADEMY home">
+      <img class="brand-logo" src="/logo.jpeg" alt="VOIDMAIN ACADEMY logo">
+    </a>
 
     <div class="nav-links">
-      <!-- Show Home button only when not logged in (public view) -->
       <ng-container *ngIf="!isLoggedIn">
         <button mat-button routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}">
-          <mat-icon>home</mat-icon>
           <span>Home</span>
         </button>
+        <button mat-button routerLink="/courses" routerLinkActive="active-link">
+          <span>Courses</span>
+        </button>
+        <button mat-button routerLink="/about" routerLinkActive="active-link">
+          <span>About</span>
+        </button>
+        <button mat-button routerLink="/services" routerLinkActive="active-link">
+          <span>Services</span>
+        </button>
+        <button mat-button routerLink="/projects" routerLinkActive="active-link">
+          <span>Projects</span>
+        </button>
+        <button mat-button routerLink="/internship" routerLinkActive="active-link">
+          <span>Internship</span>
+        </button>
+        <button mat-button routerLink="/contact" routerLinkActive="active-link">
+          <span>Contact</span>
+        </button>
       </ng-container>
+
       <button mat-button routerLink="/dashboard" routerLinkActive="active-link" *ngIf="isLoggedIn">
         <mat-icon>dashboard</mat-icon>
         <span>Dashboard</span>
+      </button>
+      <button mat-button routerLink="/courses" routerLinkActive="active-link" *ngIf="isLoggedIn">
+        <mat-icon>school</mat-icon>
+        <span>Courses</span>
       </button>
       <button mat-button routerLink="/admin" routerLinkActive="active-link" *ngIf="isLoggedIn && isAdmin">
         <mat-icon>admin_panel_settings</mat-icon>
         <span>Admin</span>
       </button>
 
-      <!-- Profile Dropdown Menu for Logged In Users -->
       <button mat-button [matMenuTriggerFor]="profileMenu" class="profile-nav-button" *ngIf="isLoggedIn">
         <div class="profile-avatar">{{getUserInitials()}}</div>
         <mat-icon class="dropdown-icon">arrow_drop_down</mat-icon>
@@ -51,45 +69,61 @@
         <mat-icon>login</mat-icon>
         <span>Sign In</span>
       </button>
-      <button mat-raised-button color="accent" routerLink="/signup" routerLinkActive="active-link" *ngIf="!isLoggedIn">
+      <button mat-raised-button class="signup-button" routerLink="/signup" routerLinkActive="active-link" *ngIf="!isLoggedIn">
         <mat-icon>person_add</mat-icon>
         <span>Sign Up</span>
-      </button>
-      <button mat-button (click)="logout()" *ngIf="isLoggedIn" class="logout-button">
-        <mat-icon>logout</mat-icon>
-        <span>Logout</span>
       </button>
     </div>
   </div>
 </mat-toolbar>
 
-<!-- Main Content -->
 <main class="main-content">
   <router-outlet></router-outlet>
 </main>
 
-<!-- Footer -->
 <footer class="footer">
   <div class="footer-container">
     <div class="footer-content">
-      <div class="footer-section">
-        <h3>StudyHub</h3>
-        <p>Your gateway to quality education and skill development.</p>
+      <div class="footer-section brand-section">
+        <div class="footer-brand">
+          <img src="/logo.jpeg" alt="VOIDMAIN ACADEMY logo" loading="lazy">
+        </div>
+        <p>Computer training institute and software development company in Dilsukhnagar, Hyderabad for AI, Python, Java full stack, data science, academic projects, IEEE projects, internships, and placement assistance.</p>
       </div>
       <div class="footer-section">
-        <h4>Quick Links</h4>
+        <h4>Explore</h4>
         <a routerLink="/">Home</a>
-        <a routerLink="/signin">Sign In</a>
-        <a routerLink="/signup">Sign Up</a>
+        <a routerLink="/about">About</a>
+        <a routerLink="/services">Services</a>
+        <a href="https://voidmaintechnologies.blogspot.com/" target="_blank" rel="noopener">Our Blog</a>
+        <a routerLink="/contact">Contact</a>
+        <a routerLink="/privacy-policy">Privacy Policy</a>
+        <a routerLink="/terms">Terms & Conditions</a>
       </div>
       <div class="footer-section">
-        <h4>Contact</h4>
-        <p>Email: info&#64;studyhub.com</p>
-        <p>Phone: +1 (555) 123-4567</p>
+        <h4>Resources</h4>
+        <a routerLink="/projects">Projects</a>
+        <a routerLink="/courses">Courses</a>
+        <a routerLink="/courses">AI Training</a>
+        <a routerLink="/courses">Python Training</a>
+        <a routerLink="/courses">Java Full Stack</a>
+        <a routerLink="/courses">Data Science</a>
+        <a routerLink="/internship">Internship</a>
+        <a routerLink="/contact">Jobs</a>
+        <a href="https://www.youtube.com/@voidmaintechnologies" target="_blank" rel="noopener">YouTube</a>
+      </div>
+      <div class="footer-section contact-section">
+        <h4>Address</h4>
+        <p>Mallika Crown Complex, Beside Union Bank, Near Metro Station, Pillar Number 1529-1530, Dilsukhnagar Main Road, Hyderabad, Telangana 500060</p>
+        <p>Landline: 040-49528954</p>
+        <p>Mobile: +91-7331139207</p>
+        <p>Email: <a href="mailto:info@voidmainacademy.com">info&#64;voidmainacademy.com</a></p>
+        <p><a href="https://wa.me/917989743392" target="_blank" rel="noopener">WhatsApp +91-7989743392</a></p>
+        <p>Mon-Sat 7am-9pm, Sun 7am-1pm</p>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>&copy; 2025 StudyHub. All rights reserved.</p>
+      <p>Copyright 2026 Voidmain Technologies.</p>
     </div>
   </div>
 </footer>

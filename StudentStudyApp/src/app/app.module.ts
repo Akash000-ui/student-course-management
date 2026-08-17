@@ -46,6 +46,13 @@ import { CourseDetailComponent } from './components/course/course-detail/course-
 import { EditCourseComponent } from './components/admin/edit-course/edit-course.component';
 import { CourseCatalogComponent } from './components/public/course-catalog/course-catalog.component';
 import { CoursePreviewComponent } from './components/public/course-preview/course-preview.component';
+import { AboutComponent } from './components/public/about/about.component';
+import { ServicesComponent } from './components/public/services/services.component';
+import { ProjectsComponent } from './components/public/projects/projects.component';
+import { InternshipComponent } from './components/public/internship/internship.component';
+import { ContactComponent } from './components/public/contact/contact.component';
+import { PrivacyPolicyComponent } from './components/public/privacy-policy/privacy-policy.component';
+import { TermsComponent } from './components/public/terms/terms.component';
 import { UserProfileComponent } from './components/dashboard/user-profile/user-profile.component';
 import { CategoryManagementComponent } from './components/admin/category-management/category-management.component';
 import { CheckoutComponent } from './components/payment/checkout/checkout.component';
@@ -71,6 +78,13 @@ import { CouponManagementComponent } from './components/admin/coupon-management/
     EditCourseComponent,
     CourseCatalogComponent,
     CoursePreviewComponent,
+    AboutComponent,
+    ServicesComponent,
+    ProjectsComponent,
+    InternshipComponent,
+    ContactComponent,
+    PrivacyPolicyComponent,
+    TermsComponent,
     UserProfileComponent,
     CouponManagementComponent
   ],

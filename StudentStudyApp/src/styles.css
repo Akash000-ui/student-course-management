@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 /* Angular Material Theme */
-@import '@angular/material/prebuilt-themes/indigo-pink.css';
+@import '@angular/material/prebuilt-themes/cyan-orange.css';
 
 /* Material Icons Font Fix - Comprehensive */
 @import url('https://fonts.googleapis.com/css2?family=Material+Icons&display=swap');
@@ -64,13 +64,34 @@ body {
 }
 
 body {
-  font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Manrope', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
-  color: #333;
-  background-color: #fafafa;
+  color: #12202c;
+  background-color: #f5f8fb;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+}
+
+:root {
+  --vm-ink: #07111c;
+  --vm-navy: #0b1b2b;
+  --vm-panel: #10283a;
+  --vm-teal: #0f766e;
+  --vm-teal-bright: #14b8a6;
+  --vm-cyan: #22d3ee;
+  --vm-amber: #f59e0b;
+  --vm-orange: #f97316;
+  --vm-blue: #2563eb;
+  --vm-surface: #ffffff;
+  --vm-soft: #f5f8fb;
+  --vm-soft-blue: #eaf5f8;
+  --vm-line: #d8e5ee;
+  --vm-text: #12202c;
+  --vm-muted: #526372;
+  --vm-shadow: 0 20px 55px rgba(7, 17, 28, 0.14);
+  --vm-shadow-soft: 0 12px 32px rgba(7, 17, 28, 0.09);
+  --vm-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 /* Fix text rendering issues */
@@ -115,7 +136,7 @@ mat-icon {
 
 /* Custom Material Design Overrides */
 .mat-mdc-card {
-  border-radius: 12px !important;
+  border-radius: 8px !important;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
 }
 
@@ -195,11 +216,11 @@ mat-icon {
 
 /* Custom Color Classes */
 .text-primary {
-  color: #3f51b5 !important;
+  color: var(--vm-teal) !important;
 }
 
 .text-accent {
-  color: #ff4081 !important;
+  color: var(--vm-amber) !important;
 }
 
 .text-warn {
@@ -213,6 +234,103 @@ mat-icon {
 /* Animation Classes */
 .fade-in {
   animation: fadeIn 0.5s ease-in;
+}
+
+.vm-reveal {
+  animation: vmReveal 0.7s var(--vm-ease) both;
+}
+
+.vm-card-lift {
+  transition: transform 0.28s var(--vm-ease), box-shadow 0.28s var(--vm-ease), border-color 0.28s var(--vm-ease);
+}
+
+.vm-card-lift:hover {
+  transform: translateY(-7px);
+  box-shadow: var(--vm-shadow);
+  border-color: rgba(34, 211, 238, 0.34);
+}
+
+.vm-image-zoom {
+  overflow: hidden;
+}
+
+.vm-image-zoom img {
+  transition: transform 0.45s var(--vm-ease);
+}
+
+.vm-image-zoom:hover img {
+  transform: scale(1.07);
+}
+
+.vm-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.vm-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-120%) skewX(-18deg);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.32), transparent);
+  transition: transform 0.65s ease;
+}
+
+.vm-shine:hover::after {
+  transform: translateX(120%) skewX(-18deg);
+}
+
+.vm-page-shell {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 88% 8%, rgba(34, 211, 238, 0.12), transparent 26%),
+    linear-gradient(180deg, #f7fbfd 0%, #ffffff 48%, #f5f8fb 100%);
+}
+
+.vm-tech-visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 210px;
+  overflow: hidden;
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(34, 211, 238, 0.14), rgba(245, 158, 11, 0.1)),
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.18), transparent 25%),
+    linear-gradient(135deg, var(--visual-a, #07111c), var(--visual-b, #0f766e));
+}
+
+.vm-tech-visual::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 34px 34px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.75), transparent);
+}
+
+.vm-tech-visual img {
+  position: relative;
+  z-index: 1;
+  width: min(42%, 118px);
+  height: min(42%, 118px);
+  object-fit: contain;
+  filter: drop-shadow(0 22px 28px rgba(0, 0, 0, 0.28));
+}
+
+.vm-logo-cluster {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(64px, 1fr));
+  gap: 14px;
+}
+
+.vm-logo-cluster img {
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
 }
 
 @keyframes fadeIn {
@@ -298,7 +416,7 @@ mat-icon {
 .mat-mdc-button:focus,
 .mat-mdc-raised-button:focus,
 .mat-mdc-outlined-button:focus {
-  outline: 2px solid #3f51b5;
+  outline: 2px solid var(--vm-cyan);
   outline-offset: 2px;
 }
 
@@ -316,5 +434,39 @@ mat-icon {
     line-height: 1.4;
     color: #000;
     background: #fff;
+  }
+}
+
+@keyframes vmReveal {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes vmFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }

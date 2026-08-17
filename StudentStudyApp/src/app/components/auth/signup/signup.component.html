@@ -8,7 +8,7 @@
           <div class="auth-icon-wrapper">
             <mat-icon class="auth-icon">person_add</mat-icon>
           </div>
-          <h1 class="auth-title">Join StudyHub</h1>
+          <h1 class="auth-title">Join VOIDMAIN ACADEMY</h1>
           <p class="auth-subtitle">Create your account to start learning</p>
         </div>
 
@@ -129,7 +129,7 @@
             <label class="checkbox-label">
               <input type="checkbox" formControlName="agreeToTerms" class="checkbox">
               <span class="checkmark"></span>
-              I agree to the <a href="#" class="terms-link">Terms and Conditions</a>
+              I agree to the <a routerLink="/terms" class="terms-link">Terms and Conditions</a>
             </label>
             <div class="form-errors"
               *ngIf="signupForm.get('agreeToTerms')?.hasError('required') && signupForm.get('agreeToTerms')?.touched">

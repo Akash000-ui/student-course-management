@@ -3,6 +3,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { AuthService } from './services/auth.service';
+import { SeoService } from './seo/seo.service';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,7 @@ import { AuthService } from './services/auth.service';
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit, OnDestroy {
-  title = 'StudyHub';
+  title = 'VOIDMAIN ACADEMY';
   isLoggedIn = false;
   isAdmin = false;
   isOnDashboard = false;
@@ -22,7 +23,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private seoService: SeoService
   ) {
     // Initialize with current authentication state immediately
     this.isLoggedIn = this.authService.isAuthenticated();
@@ -31,6 +33,8 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.seoService.watchRouteChanges();
+
     // Subscribe to authentication state changes first
     this.authSubscription = this.authService.isLoggedIn$.subscribe(
       (loggedIn: boolean) => {

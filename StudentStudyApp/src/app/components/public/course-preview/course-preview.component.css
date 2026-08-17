@@ -1,7 +1,9 @@
 /* Preview Container */
 .preview-container {
     min-height: 100vh;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background:
+        radial-gradient(circle at 90% 10%, rgba(34, 211, 238, 0.12), transparent 26%),
+        var(--vm-soft);
 }
 
 /* Loading & Error States */
@@ -73,9 +75,11 @@
     gap: 25px;
     background: white;
     padding: 40px;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    border: 1px solid var(--vm-line);
+    box-shadow: var(--vm-shadow);
     margin-bottom: 40px;
+    animation: vmReveal 0.6s ease both;
 }
 
 .course-badges {
@@ -97,8 +101,8 @@
 }
 
 .badge-difficulty {
-    background: #f3e5f5;
-    color: #7b1fa2;
+    background: #e0f7fb;
+    color: #075985;
 }
 
 .badge-beginner {
@@ -117,9 +121,10 @@
 }
 
 .course-title {
+    font-family: 'Space Grotesk', 'Manrope', sans-serif;
     font-size: 2.5rem;
     font-weight: 700;
-    color: #333;
+    color: var(--vm-text);
     line-height: 1.2;
 }
 
@@ -147,7 +152,7 @@
 }
 
 .stat-item mat-icon {
-    color: #667eea;
+    color: #0f766e;
     font-size: 22px;
     width: 22px;
     height: 22px;
@@ -165,11 +170,11 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--vm-teal) 0%, var(--vm-navy) 100%);
     color: white;
     border: none;
     padding: 16px 32px;
-    border-radius: 12px;
+    border-radius: 8px;
     font-size: 1.1rem;
     font-weight: 700;
     cursor: pointer;
@@ -178,7 +183,7 @@
 
 .btn-enroll:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 12px 24px rgba(15, 118, 110, 0.28);
 }
 
 .btn-enroll mat-icon {
@@ -203,48 +208,76 @@
 
 .header-image {
     position: relative;
-    border-radius: 12px;
+    border-radius: 8px;
     overflow: hidden;
     width: 100%;
     max-width: 100%;
     padding-top: 56.25%;
     /* 16:9 Aspect Ratio - standard for video thumbnails */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    background:
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.35), transparent 26%),
+        linear-gradient(135deg, var(--course-a, #0b1b2b), var(--course-b, #0f766e));
+    box-shadow: 0 18px 34px rgba(7, 17, 28, 0.16);
+}
+
+.header-image::before {
+    content: "";
+    position: absolute;
+    inset: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 8px;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 34px 34px;
 }
 
 .header-image img {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    width: 50%;
+    height: 58%;
+    object-fit: contain;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(0 20px 28px rgba(0, 0, 0, 0.24));
 }
 
-.image-overlay {
+.course-ai { --course-a: #082f49; --course-b: #155e75; }
+.course-data { --course-a: #064e3b; --course-b: #0f766e; }
+.course-web { --course-a: #0f172a; --course-b: #2563eb; }
+.course-java { --course-a: #7c2d12; --course-b: #f97316; }
+.course-python { --course-a: #1e3a8a; --course-b: #fbbf24; }
+.course-android { --course-a: #14532d; --course-b: #22c55e; }
+.course-default { --course-a: #0b1b2b; --course-b: #0f766e; }
+
+.preview-ribbon {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(102, 126, 234, 0.85);
+    top: 20px;
+    right: 20px;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 15px;
-    color: white;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    color: #ffffff;
+    background: rgba(7, 17, 28, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(12px);
+    font-weight: 800;
 }
 
-.image-overlay mat-icon {
-    font-size: 64px;
-    width: 64px;
-    height: 64px;
+.preview-ribbon mat-icon {
+    color: var(--vm-cyan);
+    font-size: 22px;
+    width: 22px;
+    height: 22px;
 }
 
-.image-overlay p {
-    font-size: 1.2rem;
-    font-weight: 600;
+.preview-ribbon span {
+    font-size: 0.9rem;
 }
 
 /* Course Details */
@@ -257,8 +290,9 @@
 .detail-section {
     background: white;
     padding: 35px;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    border: 1px solid var(--vm-line);
+    box-shadow: 0 14px 34px rgba(13, 32, 48, 0.08);
 }
 
 .detail-section h2 {
@@ -271,7 +305,7 @@
 }
 
 .detail-section h2 mat-icon {
-    color: #667eea;
+    color: #0f766e;
     font-size: 32px;
     width: 32px;
     height: 32px;
@@ -287,10 +321,21 @@
 .trainer-image {
     width: 150px;
     height: 150px;
-    border-radius: 12px;
+    border-radius: 8px;
     object-fit: cover;
-    border: 3px solid #667eea;
+    border: 3px solid #0f766e;
     flex-shrink: 0;
+}
+
+.trainer-image-fallback {
+    display: grid;
+    place-items: center;
+    color: #ffffff;
+    background:
+        linear-gradient(135deg, var(--vm-teal), var(--vm-navy));
+    font-size: 3rem;
+    font-weight: 850;
+    text-transform: uppercase;
 }
 
 .trainer-info {
@@ -305,7 +350,7 @@
 
 .trainer-field {
     font-size: 1rem;
-    color: #667eea;
+    color: #0f766e;
     font-weight: 600;
     margin-bottom: 10px;
     display: block;
@@ -323,7 +368,7 @@
     font-size: 20px;
     width: 20px;
     height: 20px;
-    color: #667eea;
+    color: #0f766e;
 }
 
 /* Description Wrapper with Read More */
@@ -360,7 +405,7 @@
 .read-more-btn {
     background: none;
     border: none;
-    color: #667eea;
+    color: #0f766e;
     cursor: pointer;
     font-size: 0.9rem;
     font-weight: 600;
@@ -373,7 +418,7 @@
 }
 
 .read-more-btn:hover {
-    color: #5568d3;
+    color: var(--vm-amber);
     transform: translateX(2px);
 }
 
@@ -419,7 +464,7 @@
 }
 
 .content-item mat-icon {
-    color: #667eea;
+    color: #0f766e;
     font-size: 40px;
     width: 40px;
     height: 40px;
@@ -438,20 +483,28 @@
     line-height: 1.6;
 }
 
-.locked-content {
+.preview-note {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    background: #f5f5f5;
+    background: #eef8f7;
+    border: 1px solid rgba(15, 118, 110, 0.18);
     padding: 20px;
     border-radius: 8px;
-    color: #666;
+    color: var(--vm-text);
     font-weight: 500;
 }
 
-.locked-content mat-icon {
-    color: #667eea;
+.preview-note mat-icon {
+    color: #0f766e;
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+}
+
+.preview-note p {
+    margin: 0;
 }
 
 /* Learning Outcomes */
@@ -487,10 +540,12 @@
 
 /* CTA Section */
 .cta-section {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background:
+        radial-gradient(circle at 16% 20%, rgba(34, 211, 238, 0.18), transparent 28%),
+        linear-gradient(135deg, #07111c 0%, #123243 100%);
     color: white;
     padding: 60px 40px;
-    border-radius: 16px;
+    border-radius: 8px;
     text-align: center;
     margin-top: 20px;
 }
@@ -535,7 +590,7 @@
 
 .btn-primary {
     background: white;
-    color: #667eea;
+    color: #0f766e;
 }
 
 .btn-primary:hover {
@@ -551,7 +606,7 @@
 
 .btn-outline:hover {
     background: white;
-    color: #667eea;
+    color: #0f766e;
 }
 
 .btn-lg {
