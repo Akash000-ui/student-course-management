@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -41,7 +41,7 @@ export interface Coupon {
 })
 export class CouponService {
 
-    private apiUrl = 'http://localhost:8080/api/coupons';
+    private apiUrl = '/api/coupons';
 
     constructor(private http: HttpClient) { }
 

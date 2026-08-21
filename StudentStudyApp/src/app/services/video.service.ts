@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Video, VideoDto, ApiResponse } from '../models/video.model';
@@ -9,7 +9,7 @@ import { Video, VideoDto, ApiResponse } from '../models/video.model';
 export class VideoService {
   // private baseUrl = 'https://studiehub-backend-latest.onrender.com/api/videos';
 
-  private baseUrl = 'http://localhost:8080/api/videos';
+  private baseUrl = '/api/videos';
   constructor(private http: HttpClient) { }
 
   /**

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Enrollment, EnrollmentRequest, EnrollmentStats, ApiResponse } from '../models/enrollment.model';
@@ -9,7 +9,7 @@ import { ApiResponse as ProgressApiResponse, VideoCompletionResponse } from '../
 })
 export class EnrollmentService {
   // private baseUrl = 'https://studiehub-backend-latest.onrender.com/api/enrollments';
-  private baseUrl = 'http://localhost:8080/api/enrollments';
+  private baseUrl = '/api/enrollments';
 
   constructor(private http: HttpClient) { }
 
@@ -74,7 +74,7 @@ export class EnrollmentService {
    */
   markVideoComplete(courseId: string, videoId: string): Observable<ProgressApiResponse<VideoCompletionResponse>> {
     return this.http.put<ProgressApiResponse<VideoCompletionResponse>>(
-      `http://localhost:8080/api/progress/courses/${courseId}/videos/${videoId}/complete`,
+      `/api/progress/courses/${courseId}/videos/${videoId}/complete`,
       {}
     );
   }
@@ -84,7 +84,7 @@ export class EnrollmentService {
    */
   getCourseProgress(courseId: string): Observable<ProgressApiResponse<VideoCompletionResponse>> {
     return this.http.get<ProgressApiResponse<VideoCompletionResponse>>(
-      `http://localhost:8080/api/progress/courses/${courseId}`
+      `/api/progress/courses/${courseId}`
     );
   }
 

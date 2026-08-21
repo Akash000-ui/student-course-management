@@ -1,199 +1,165 @@
 <section class="hero-section">
   <div class="hero-container">
     <div class="hero-content vm-reveal">
-      <span class="eyebrow">Training institute and software development company</span>
-      <h1>Voidmain Technologies training, projects, and software development services</h1>
-      <p>Build practical skill in Java full stack, Python full stack, data science, AI, analytics, web technologies, SAP, Tally, academic projects, IEEE projects, internships, and live software development.</p>
+      <span class="eyebrow">Software course platform</span>
+      <h1>Choose the right software course and start learning with clarity</h1>
+      <p>Browse practical courses in Java full stack, Python full stack, AI, data science, web development, SAP, and Tally. Preview the course, create your account, and continue learning from your dashboard.</p>
       <div class="hero-actions">
         <button mat-raised-button class="primary-action vm-shine" routerLink="/courses">
           <mat-icon>school</mat-icon>
-          <span>Explore Courses</span>
+          <span>Browse Courses</span>
         </button>
-        <button mat-stroked-button class="secondary-action" routerLink="/projects">
-          <mat-icon>engineering</mat-icon>
-          <span>View Projects</span>
-        </button>
-        <button mat-button class="plain-action" routerLink="/contact">
-          <mat-icon>call</mat-icon>
-          <span>Request Callback</span>
+        <button mat-stroked-button class="secondary-action" routerLink="/signup">
+          <mat-icon>person_add</mat-icon>
+          <span>Create Account</span>
         </button>
       </div>
     </div>
-    <div class="hero-visual vm-reveal" aria-label="Voidmain training and project development highlights">
-      <div class="visual-frame">
-        <div class="visual-topbar">
-          <span></span><span></span><span></span>
-        </div>
-        <div class="hero-logo-cluster">
+
+    <div class="hero-panel vm-reveal" aria-label="Popular software course tracks">
+      <div class="panel-header">
+        <span>Popular Tracks</span>
+        <strong>Start from your goal</strong>
+      </div>
+      <div class="track-preview">
+        <article>
           <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg" alt="Java logo" loading="lazy">
+          <div>
+            <strong>Java Full Stack</strong>
+            <span>Backend, frontend, database</span>
+          </div>
+        </article>
+        <article>
           <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="Python logo" loading="lazy">
-          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/angular/angular-original.svg" alt="Angular logo" loading="lazy">
-          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" alt="React logo" loading="lazy">
-          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg" alt="Node.js logo" loading="lazy">
+          <div>
+            <strong>Python Full Stack</strong>
+            <span>Django, APIs, web apps</span>
+          </div>
+        </article>
+        <article>
           <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tensorflow/tensorflow-original.svg" alt="TensorFlow logo" loading="lazy">
-        </div>
-        <div class="visual-overlay">
-          <span>Live mentor lab</span>
-          <strong>Java, Python, AI and full stack</strong>
-        </div>
-      </div>
-      <div class="float-card float-card-top">
-        <mat-icon>terminal</mat-icon>
-        <div>
-          <strong>Practical labs</strong>
-          <span>Code, debug, deploy</span>
-        </div>
-      </div>
-      <div class="float-card float-card-bottom">
-        <mat-icon>assignment_turned_in</mat-icon>
-        <div>
-          <strong>Project-ready</strong>
-          <span>Docs and presentation support</span>
-        </div>
+          <div>
+            <strong>AI & Data Science</strong>
+            <span>Models, analysis, notebooks</span>
+          </div>
+        </article>
       </div>
     </div>
   </div>
 </section>
 
-<section class="services-strip">
-  <article class="service-tile vm-card-lift vm-image-zoom">
-    <div class="service-visual stack-visual">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg" alt="Java training logo" loading="lazy">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/spring/spring-original.svg" alt="Spring logo" loading="lazy">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/angular/angular-original.svg" alt="Angular logo" loading="lazy">
-    </div>
-    <h2>Software Training</h2>
-    <p>Industry-oriented training for AI, full stack, analytics, and software engineering with practical labs and mentor-led projects.</p>
-    <a routerLink="/courses">Explore Courses</a>
-  </article>
-  <article class="service-tile vm-card-lift vm-image-zoom">
-    <div class="service-visual project-visual">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tensorflow/tensorflow-original.svg" alt="AI project logo" loading="lazy">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="Python logo" loading="lazy">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original.svg" alt="MongoDB logo" loading="lazy">
-    </div>
-    <h2>Academic Projects</h2>
-    <p>Guided IEEE, academic, and final-year project development supported by developers, trainers, documentation, and deployment guidance.</p>
-    <a routerLink="/projects">View Projects</a>
-  </article>
-  <article class="service-tile vm-card-lift vm-image-zoom">
-    <div class="service-visual delivery-visual">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" alt="React logo" loading="lazy">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg" alt="Node.js logo" loading="lazy">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" alt="Docker logo" loading="lazy">
-    </div>
-    <h2>Real Time Projects</h2>
-    <p>Custom web, mobile, and AI solution development for businesses, startups, and students building real-time software products.</p>
-    <a routerLink="/services">View Live Projects</a>
-  </article>
-</section>
-
-<section class="tech-strip" aria-label="Technology training stack">
-  <span>Technology tracks</span>
-  <div>
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg" alt="Java logo" loading="lazy">
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="Python logo" loading="lazy">
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/angular/angular-original.svg" alt="Angular logo" loading="lazy">
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" alt="React logo" loading="lazy">
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg" alt="Node.js logo" loading="lazy">
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original.svg" alt="MongoDB logo" loading="lazy">
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tensorflow/tensorflow-original.svg" alt="TensorFlow logo" loading="lazy">
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/android/android-original.svg" alt="Android logo" loading="lazy">
-  </div>
-</section>
-
-<section class="stats-section">
-  <div class="stat-item vm-card-lift">
-    <strong>8+</strong>
-    <span>Years on the market</span>
-  </div>
-  <div class="stat-item vm-card-lift">
-    <strong>45+</strong>
-    <span>Trainers</span>
-  </div>
-  <div class="stat-item vm-card-lift">
-    <strong>100%</strong>
-    <span>Satisfaction rate</span>
-  </div>
-  <div class="stat-item vm-card-lift">
-    <strong>80%</strong>
-    <span>Realtime trainers</span>
-  </div>
-</section>
-
-<section class="content-section">
+<section class="course-tracks">
   <div class="section-heading">
-    <span class="eyebrow">Why Choose Us?</span>
-    <h2>Career-ready training with development practice built in</h2>
-    <p>We combine software development practice, structured training, internships, and project mentoring so learners build job-ready technology skills.</p>
+    <span class="eyebrow">Explore courses</span>
+    <h2>Focused tracks for practical software learning</h2>
+    <p>Pick a course category, preview details, and enroll only when it matches your learning goal.</p>
   </div>
-  <div class="reason-grid">
-    <article class="vm-card-lift">
-      <span>01</span>
-      <h3>Affordable Pricing</h3>
-      <p>Learn through affordable, structured programs with practical assignments, guided projects, and transparent course support.</p>
+
+  <div class="tracks-grid">
+    <article class="track-card vm-card-lift">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg" alt="Java logo" loading="lazy">
+      <h3>Java Full Stack</h3>
+      <p>Core Java, Spring Boot, Angular, REST APIs, database design, and full application development.</p>
+      <a routerLink="/courses">View Courses</a>
     </article>
-    <article class="vm-card-lift">
-      <span>02</span>
-      <h3>Corporate-Level Training</h3>
-      <p>Build career-ready capability through industry-focused modules in AI, full stack development, data, cloud, and enterprise tools.</p>
+    <article class="track-card vm-card-lift">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="Python logo" loading="lazy">
+      <h3>Python Full Stack</h3>
+      <p>Python fundamentals, Django or Flask, web development, APIs, and deployment basics.</p>
+      <a routerLink="/courses">View Courses</a>
     </article>
-    <article class="vm-card-lift">
-      <span>03</span>
-      <h3>Expert Guidance</h3>
-      <p>Learn from experienced mentors who connect concepts to real implementation, project planning, debugging, and deployment workflows.</p>
+    <article class="track-card vm-card-lift">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" alt="React logo" loading="lazy">
+      <h3>Web Development</h3>
+      <p>HTML, CSS, JavaScript, React, Angular, responsive UI, and modern frontend workflows.</p>
+      <a routerLink="/courses">View Courses</a>
     </article>
-    <article class="vm-card-lift">
-      <span>04</span>
-      <h3>Advanced Technology Stack</h3>
-      <p>Choose from AI, Python, Java, MERN, MEAN, data science, analytics, Android, cloud basics, databases, and live software projects.</p>
+    <article class="track-card vm-card-lift">
+      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tensorflow/tensorflow-original.svg" alt="TensorFlow logo" loading="lazy">
+      <h3>AI & Data Science</h3>
+      <p>Python data tools, machine learning, analytics, visualization, and model fundamentals.</p>
+      <a routerLink="/courses">View Courses</a>
     </article>
   </div>
 </section>
 
-<section class="split-band">
-  <div>
-    <span class="eyebrow">Project development</span>
-    <h2>Live Projects and IEEE Project Development</h2>
-    <p>We develop web applications, Android apps, AI systems, data science projects, cloud prototypes, data mining solutions, big data workflows, image processing systems, and networking projects for students and clients.</p>
-    <button mat-raised-button class="primary-action vm-shine" routerLink="/projects">
-      <mat-icon>arrow_forward</mat-icon>
-      <span>Get Started</span>
-    </button>
+<section class="learning-flow">
+  <div class="section-heading">
+    <span class="eyebrow">How it works</span>
+    <h2>A simple flow from browsing to learning</h2>
   </div>
-  <div>
-    <div class="band-media">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg" alt="Development workspace logo" loading="lazy">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" alt="Git logo" loading="lazy">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" alt="Docker logo" loading="lazy">
-    </div>
-    <span class="eyebrow">Flexible learning</span>
-    <h2>Flexible Online and Classroom Training</h2>
-    <p>Choose classroom or online sessions with interactive mentoring, practical assignments, and scheduling support for students and working professionals.</p>
-    <button mat-stroked-button class="dark-outline" routerLink="/services">
-      <mat-icon>event_available</mat-icon>
-      <span>Explore Learning</span>
-    </button>
+  <div class="flow-grid">
+    <article>
+      <span>1</span>
+      <h3>Browse</h3>
+      <p>Compare available courses, language, duration, trainer details, and learning outcomes.</p>
+    </article>
+    <article>
+      <span>2</span>
+      <h3>Preview</h3>
+      <p>Open a course preview to understand what you will learn before creating an account.</p>
+    </article>
+    <article>
+      <span>3</span>
+      <h3>Enroll</h3>
+      <p>Sign up, complete checkout where required, and unlock the course inside your dashboard.</p>
+    </article>
+    <article>
+      <span>4</span>
+      <h3>Learn</h3>
+      <p>Continue lessons, track progress, and revisit course material whenever you need.</p>
+    </article>
+  </div>
+</section>
+
+<section class="feature-section">
+  <div class="feature-copy">
+    <span class="eyebrow">Learning experience</span>
+    <h2>Clean course access for everyday learners</h2>
+    <p>The application stays focused on courses, course previews, secure accounts, payment checkout, and the learner dashboard.</p>
+  </div>
+  <div class="feature-list">
+    <article>
+      <mat-icon>play_circle</mat-icon>
+      <div>
+        <h3>Structured course videos</h3>
+        <p>Lessons are organized so learners can continue without searching through unrelated content.</p>
+      </div>
+    </article>
+    <article>
+      <mat-icon>verified_user</mat-icon>
+      <div>
+        <h3>Secure learner accounts</h3>
+        <p>Users sign in, manage their profile, and access enrolled courses from one place.</p>
+      </div>
+    </article>
+    <article>
+      <mat-icon>insights</mat-icon>
+      <div>
+        <h3>Progress-friendly dashboard</h3>
+        <p>The dashboard keeps learning activity and course access easy to scan.</p>
+      </div>
+    </article>
   </div>
 </section>
 
 <section class="faq-section">
   <div class="section-heading">
-    <span class="eyebrow">Frequently Asked Questions</span>
-    <h2>Quick answers for learners and project teams</h2>
+    <span class="eyebrow">Questions</span>
+    <h2>Course platform basics</h2>
   </div>
   <div class="faq-grid">
     <article class="vm-card-lift">
-      <h3>Which is the best computer training institute in Dilsukhnagar?</h3>
-      <p>VOIDMAIN ACADEMY provides practical computer training in Dilsukhnagar for AI, Python, Java full stack, data science, analytics, internships, and academic projects.</p>
+      <h3>Can I preview a course before enrolling?</h3>
+      <p>Yes. Course preview pages show important details before you decide to sign up or continue.</p>
     </article>
     <article class="vm-card-lift">
-      <h3>Does VOIDMAIN ACADEMY provide IEEE projects in Hyderabad?</h3>
-      <p>Yes. Students can get IEEE projects, final year projects, mini projects, major projects, AI projects, Python projects, Java projects, Android projects, and web projects.</p>
+      <h3>Where do enrolled courses appear?</h3>
+      <p>After signing in, enrolled courses are available from the learner dashboard.</p>
     </article>
     <article class="vm-card-lift">
-      <h3>Can I join internship programs in Voidmain Technologies?</h3>
-      <p>Yes. Internship programs are available for AI, Python, Java, full stack, data science, data analytics, software development, and live project experience.</p>
+      <h3>Which course tracks are available?</h3>
+      <p>The catalog can include Java, Python, AI, data science, web development, SAP, Tally, and other software courses added by the admin.</p>
     </article>
   </div>
 </section>

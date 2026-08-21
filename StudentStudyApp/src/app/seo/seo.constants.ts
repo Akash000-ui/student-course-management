@@ -39,9 +39,9 @@ export const SEO_SITE = {
     'AI course Hyderabad',
     'data science training Hyderabad',
     'data analytics course Hyderabad',
-    'IEEE projects Hyderabad',
-    'academic project guidance Hyderabad',
-    'software internship Hyderabad',
+    'web development course Hyderabad',
+    'SAP Tally course Hyderabad',
+    'online software courses',
     'full stack developer course Hyderabad',
     'Voidmain Academy'
   ]
@@ -49,7 +49,7 @@ export const SEO_SITE = {
 
 export const DEFAULT_SEO = {
   title: 'VOIDMAIN ACADEMY | Software Courses Training in Hyderabad',
-  description: 'VOIDMAIN ACADEMY provides Java full stack, Python full stack, AI, data science, data analytics, web development, internships, and academic project guidance in Dilsukhnagar, Hyderabad.',
+  description: 'VOIDMAIN ACADEMY provides Java full stack, Python full stack, AI, data science, data analytics, web development, SAP, and Tally software courses.',
   keywords: SEO_SITE.keywords.join(', '),
   image: SEO_SITE.image,
   type: 'website'

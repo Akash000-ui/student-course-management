@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -86,7 +86,7 @@ export interface ApiResponse<T> {
 export class CourseService {
   // private baseUrl = 'https://studiehub-backend-latest.onrender.com/api/courses';
 
-  private baseUrl = 'http://localhost:8080/api/courses';
+  private baseUrl = '/api/courses';
 
   constructor(private http: HttpClient) { }
 

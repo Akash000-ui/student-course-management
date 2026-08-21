@@ -14,11 +14,6 @@ import { CategoryManagementComponent } from './components/admin/category-managem
 import { CourseDetailComponent } from './components/course/course-detail/course-detail.component';
 import { CourseCatalogComponent } from './components/public/course-catalog/course-catalog.component';
 import { CoursePreviewComponent } from './components/public/course-preview/course-preview.component';
-import { AboutComponent } from './components/public/about/about.component';
-import { ServicesComponent } from './components/public/services/services.component';
-import { ProjectsComponent } from './components/public/projects/projects.component';
-import { InternshipComponent } from './components/public/internship/internship.component';
-import { ContactComponent } from './components/public/contact/contact.component';
 import { PrivacyPolicyComponent } from './components/public/privacy-policy/privacy-policy.component';
 import { TermsComponent } from './components/public/terms/terms.component';
 import { CheckoutComponent } from './components/payment/checkout/checkout.component';
@@ -33,8 +28,8 @@ const routes: Routes = [
     data: {
       seo: {
         title: 'VOIDMAIN ACADEMY | Software Courses Training in Hyderabad',
-        description: 'Join VOIDMAIN ACADEMY in Dilsukhnagar, Hyderabad for Java full stack, Python full stack, AI, data science, analytics, internships, and academic project guidance.',
-        keywords: 'software courses training Hyderabad, Java full stack course Dilsukhnagar, Python full stack training Hyderabad, AI course Hyderabad, data science course Hyderabad, IEEE projects Hyderabad, Voidmain Academy',
+        description: 'Explore practical software courses for Java full stack, Python full stack, AI, data science, data analytics, web development, SAP, and Tally.',
+        keywords: 'software courses Hyderabad, online software courses, Java full stack course, Python full stack training, AI course, data science course, web development course, SAP Tally course',
         canonical: '/'
       }
     }
@@ -45,8 +40,8 @@ const routes: Routes = [
     data: {
       seo: {
         title: 'VOIDMAIN ACADEMY | Software Courses Training in Hyderabad',
-        description: 'Join VOIDMAIN ACADEMY in Dilsukhnagar, Hyderabad for Java full stack, Python full stack, AI, data science, analytics, internships, and academic project guidance.',
-        keywords: 'software courses training Hyderabad, Java full stack course Dilsukhnagar, Python full stack training Hyderabad, AI course Hyderabad, data science course Hyderabad, IEEE projects Hyderabad, Voidmain Academy',
+        description: 'Explore practical software courses for Java full stack, Python full stack, AI, data science, data analytics, web development, SAP, and Tally.',
+        keywords: 'software courses Hyderabad, online software courses, Java full stack course, Python full stack training, AI course, data science course, web development course, SAP Tally course',
         canonical: '/'
       }
     }
@@ -57,7 +52,7 @@ const routes: Routes = [
     data: {
       seo: {
         title: 'Software Courses in Hyderabad | Java, Python, AI, Data Science',
-        description: 'Explore classroom and online software courses at VOIDMAIN ACADEMY: Java full stack, Python full stack, AI, data science, data analytics, web development, SAP, and Tally.',
+        description: 'Explore software courses: Java full stack, Python full stack, AI, data science, data analytics, web development, SAP, and Tally.',
         keywords: 'software courses Hyderabad, online software courses, Java full stack training, Python full stack course, AI training Hyderabad, data science training, data analytics course, SAP Tally training',
         canonical: '/courses'
       }
@@ -76,73 +71,18 @@ const routes: Routes = [
       }
     }
   },
-  {
-    path: 'about',
-    component: AboutComponent,
-    data: {
-      seo: {
-        title: 'About VOIDMAIN ACADEMY | Software Training Institute Hyderabad',
-        description: 'Learn about VOIDMAIN ACADEMY, a Dilsukhnagar Hyderabad software training institute for practical courses, internships, project mentoring, and placement-oriented learning.',
-        keywords: 'about Voidmain Academy, software training institute Hyderabad, computer training institute Dilsukhnagar',
-        canonical: '/about'
-      }
-    }
-  },
-  {
-    path: 'services',
-    component: ServicesComponent,
-    data: {
-      seo: {
-        title: 'Software Training and Development Services | VOIDMAIN ACADEMY',
-        description: 'VOIDMAIN ACADEMY offers software courses, classroom and online training, live project development, academic project support, internships, and placement assistance.',
-        keywords: 'software development services Hyderabad, live projects Hyderabad, software training services, project development Dilsukhnagar',
-        canonical: '/services'
-      }
-    }
-  },
-  {
-    path: 'projects',
-    component: ProjectsComponent,
-    data: {
-      seo: {
-        title: 'IEEE and Academic Projects in Hyderabad | VOIDMAIN ACADEMY',
-        description: 'Get guided IEEE projects, final year projects, mini projects, major projects, documentation, implementation support, and presentation help in Hyderabad.',
-        keywords: 'IEEE projects Hyderabad, academic projects Hyderabad, final year project guidance, mini projects, major projects, project documentation Hyderabad',
-        canonical: '/projects'
-      }
-    }
-  },
-  {
-    path: 'internship',
-    component: InternshipComponent,
-    data: {
-      seo: {
-        title: 'Software Internship in Hyderabad | Java, Python, AI, Full Stack',
-        description: 'Apply for industry-oriented software internships at VOIDMAIN ACADEMY in Java, Python, AI, full stack, data science, Android, and web development.',
-        keywords: 'software internship Hyderabad, Java internship Hyderabad, Python internship, AI internship, full stack internship Dilsukhnagar',
-        canonical: '/internship'
-      }
-    }
-  },
-  {
-    path: 'contact',
-    component: ContactComponent,
-    data: {
-      seo: {
-        title: 'Contact VOIDMAIN ACADEMY Dilsukhnagar Hyderabad',
-        description: 'Contact VOIDMAIN ACADEMY near Dilsukhnagar Metro Station for software courses, internships, academic projects, and development service enquiries.',
-        keywords: 'Voidmain Academy contact, software training Dilsukhnagar contact, computer institute Hyderabad phone',
-        canonical: '/contact'
-      }
-    }
-  },
+  { path: 'about', redirectTo: 'courses', pathMatch: 'full' },
+  { path: 'services', redirectTo: 'courses', pathMatch: 'full' },
+  { path: 'projects', redirectTo: 'courses', pathMatch: 'full' },
+  { path: 'internship', redirectTo: 'courses', pathMatch: 'full' },
+  { path: 'contact', redirectTo: 'courses', pathMatch: 'full' },
   {
     path: 'privacy-policy',
     component: PrivacyPolicyComponent,
     data: {
       seo: {
         title: 'Privacy Policy | VOIDMAIN ACADEMY',
-        description: 'Read the VOIDMAIN ACADEMY privacy policy for course, internship, project, and enquiry data handling.',
+        description: 'Read the VOIDMAIN ACADEMY privacy policy for course account and learning data handling.',
         keywords: 'Voidmain Academy privacy policy',
         canonical: '/privacy-policy'
       }
@@ -154,7 +94,7 @@ const routes: Routes = [
     data: {
       seo: {
         title: 'Terms and Conditions | VOIDMAIN ACADEMY',
-        description: 'Read the VOIDMAIN ACADEMY terms and conditions for courses, internships, project guidance, and software development enquiries.',
+        description: 'Read the VOIDMAIN ACADEMY terms and conditions for course access, learning accounts, and payments.',
         keywords: 'Voidmain Academy terms and conditions',
         canonical: '/terms'
       }

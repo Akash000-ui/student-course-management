@@ -2,9 +2,9 @@
 .auth-container {
   min-height: 100vh;
   background:
-    radial-gradient(circle at 82% 18%, rgba(34, 211, 238, 0.2), transparent 28%),
-    radial-gradient(circle at 18% 82%, rgba(245, 158, 11, 0.16), transparent 28%),
-    linear-gradient(135deg, #07111c 0%, #0b2235 58%, #0f3b47 100%);
+    radial-gradient(circle at 82% 18%, rgba(20, 184, 166, 0.14), transparent 28%),
+    radial-gradient(circle at 18% 82%, rgba(37, 99, 235, 0.08), transparent 28%),
+    linear-gradient(180deg, #ffffff 0%, #eef8f7 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -47,7 +47,7 @@ mat-icon {
 }
 
 .auth-icon-wrapper {
-  background: linear-gradient(135deg, var(--vm-teal) 0%, var(--vm-navy) 100%);
+  background: linear-gradient(135deg, #e0f2fe 0%, #ccfbf1 100%);
   width: 80px;
   height: 80px;
   border-radius: 50%;
@@ -58,7 +58,7 @@ mat-icon {
 }
 
 .auth-icon {
-  color: white !important;
+  color: var(--vm-teal) !important;
   font-size: 2.5rem !important;
   width: 40px !important;
   height: 40px !important;
@@ -188,8 +188,8 @@ mat-icon {
 }
 
 .submit-btn {
-  background: linear-gradient(135deg, var(--vm-amber) 0%, #ffd166 100%);
-  color: var(--vm-ink);
+  background: linear-gradient(135deg, var(--vm-teal) 0%, #22c7b8 100%);
+  color: #ffffff;
   border: none;
   border-radius: 12px;
   padding: 14px 20px;
@@ -206,7 +206,7 @@ mat-icon {
 
 .submit-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(245, 158, 11, 0.28);
+  box-shadow: 0 10px 24px rgba(15, 118, 110, 0.22);
 }
 
 .submit-btn:disabled {

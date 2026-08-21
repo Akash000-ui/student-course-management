@@ -1,4 +1,4 @@
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+﻿import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -49,7 +49,7 @@ export interface SimpleApiResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = "http://localhost:8080/api/auth";
+  private baseUrl = "/api/auth";
   private isLoggedInSubject = new BehaviorSubject<boolean>(false);
   public isLoggedIn$ = this.isLoggedInSubject.asObservable();
   private isBrowser: boolean;
@@ -118,15 +118,15 @@ export class AuthService {
 
   // OTP Methods
   sendOtp(email: string): Observable<OtpResponse> {
-    return this.http.post<OtpResponse>('http://localhost:8080/api/otp/send', { email });
+    return this.http.post<OtpResponse>('/api/otp/send', { email });
   }
 
   verifyOtp(email: string, otp: string): Observable<OtpResponse> {
-    return this.http.post<OtpResponse>('http://localhost:8080/api/otp/verify', { email, otp });
+    return this.http.post<OtpResponse>('/api/otp/verify', { email, otp });
   }
 
   resendOtp(email: string): Observable<OtpResponse> {
-    return this.http.post<OtpResponse>('http://localhost:8080/api/otp/resend', { email });
+    return this.http.post<OtpResponse>('/api/otp/resend', { email });
   }
 
   loginWithOtp(email: string, otp: string): Observable<AuthResponse> {

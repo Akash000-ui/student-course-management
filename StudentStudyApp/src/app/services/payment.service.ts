@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -61,7 +61,7 @@ export interface Order {
 })
 export class PaymentService {
 
-    private apiUrl = 'http://localhost:8080/api/payments';
+    private apiUrl = '/api/payments';
 
     constructor(private http: HttpClient) { }
 

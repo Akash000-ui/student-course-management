@@ -53,7 +53,7 @@ export class SeoService {
   }, image?: string): void {
     const courseImage = this.absoluteUrl(image || course.thumbnailUrl || SEO_SITE.image);
     const title = `${course.title} Course in Hyderabad | ${SEO_SITE.name}`;
-    const description = this.trimDescription(course.description || `Learn ${course.title} with practical training, mentor support, and project guidance at ${SEO_SITE.name}.`);
+    const description = this.trimDescription(course.description || `Learn ${course.title} with structured lessons and course support at ${SEO_SITE.name}.`);
 
     this.writeSeo({
       title,
@@ -127,7 +127,7 @@ export class SeoService {
     this.meta.updateTag({ name: 'author', content: SEO_SITE.name });
     this.meta.updateTag({ name: 'publisher', content: SEO_SITE.name });
     this.meta.updateTag({ name: 'robots', content: seo.noIndex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1' });
-    this.meta.updateTag({ name: 'theme-color', content: '#07111c' });
+    this.meta.updateTag({ name: 'theme-color', content: '#f7fbff' });
     this.meta.updateTag({ name: 'geo.position', content: `${SEO_SITE.geo.latitude};${SEO_SITE.geo.longitude}` });
     this.meta.updateTag({ name: 'geo.placename', content: 'Dilsukhnagar, Hyderabad, Telangana' });
     this.meta.updateTag({ name: 'geo.region', content: 'IN-TG' });
@@ -175,8 +175,8 @@ export class SeoService {
         },
         about: [
           { '@type': 'Thing', name: 'Software Courses Training' },
-          { '@type': 'Thing', name: 'Internships' },
-          { '@type': 'Thing', name: 'Academic Projects' }
+          { '@type': 'Thing', name: 'Online Courses' },
+          { '@type': 'Thing', name: 'Full Stack Development Courses' }
         ]
       },
       this.breadcrumbForUrl(canonical, title)

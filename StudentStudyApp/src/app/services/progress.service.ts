@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiResponse, VideoCompletionResponse } from '../models/progress.model';
@@ -6,7 +6,7 @@ import { ApiResponse, VideoCompletionResponse } from '../models/progress.model';
 @Injectable({ providedIn: 'root' })
 export class ProgressService {
     // private baseUrl = 'https://studiehub-backend-latest.onrender.com/api/progress';
-    private baseUrl = 'http://localhost:8080/api/progress';
+    private baseUrl = '/api/progress';
 
     constructor(private http: HttpClient) { }
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -42,7 +42,7 @@ export interface ApiResponse<T> {
 })
 export class AdminService {
   // private baseUrl = 'https://studiehub-backend-latest.onrender.com/api/admin';
-  private baseUrl = 'http://localhost:8080/api/admin';
+  private baseUrl = '/api/admin';
 
   constructor(private http: HttpClient) { }
 

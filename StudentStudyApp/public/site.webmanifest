@@ -1,11 +1,11 @@
 {
   "name": "VOIDMAIN ACADEMY",
   "short_name": "VOIDMAIN",
-  "description": "Software courses training, internships, and academic project guidance in Hyderabad.",
+  "description": "Software courses for Java full stack, Python full stack, AI, data science, web development, SAP, and Tally.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#07111c",
-  "theme_color": "#07111c",
+  "background_color": "#f7fbff",
+  "theme_color": "#f7fbff",
   "icons": [
     {
       "src": "/logo.jpeg",

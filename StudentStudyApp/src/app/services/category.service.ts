@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+﻿import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -29,7 +29,7 @@ export interface ApiResponse<T> {
     providedIn: 'root'
 })
 export class CategoryService {
-    private baseUrl = 'http://localhost:8080/api/categories';
+    private baseUrl = '/api/categories';
 
     constructor(private http: HttpClient) { }
 
