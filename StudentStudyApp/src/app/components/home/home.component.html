@@ -1,165 +1,54 @@
-<section class="hero-section">
-  <div class="hero-container">
-    <div class="hero-content vm-reveal">
-      <span class="eyebrow">Software course platform</span>
-      <h1>Choose the right software course and start learning with clarity</h1>
-      <p>Browse practical courses in Java full stack, Python full stack, AI, data science, web development, SAP, and Tally. Preview the course, create your account, and continue learning from your dashboard.</p>
-      <div class="hero-actions">
-        <button mat-raised-button class="primary-action vm-shine" routerLink="/courses">
-          <mat-icon>school</mat-icon>
-          <span>Browse Courses</span>
-        </button>
-        <button mat-stroked-button class="secondary-action" routerLink="/signup">
-          <mat-icon>person_add</mat-icon>
-          <span>Create Account</span>
-        </button>
+<section class="home-page">
+  <header class="home-intro">
+    <span>VOIDMAIN ACADEMY</span>
+    <h1>Learn software skills with practical course guidance.</h1>
+    <p>Explore focused courses for programming, full stack development, AI, data, and modern web technologies.</p>
+  </header>
+
+  <section class="course-section">
+    <div class="section-title">
+      <div>
+        <span>Featured courses</span>
+        <h2>Start with popular tracks</h2>
       </div>
+      <button type="button" (click)="loadMore()">Load more</button>
     </div>
 
-    <div class="hero-panel vm-reveal" aria-label="Popular software course tracks">
-      <div class="panel-header">
-        <span>Popular Tracks</span>
-        <strong>Start from your goal</strong>
-      </div>
-      <div class="track-preview">
-        <article>
-          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg" alt="Java logo" loading="lazy">
-          <div>
-            <strong>Java Full Stack</strong>
-            <span>Backend, frontend, database</span>
-          </div>
-        </article>
-        <article>
-          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="Python logo" loading="lazy">
-          <div>
-            <strong>Python Full Stack</strong>
-            <span>Django, APIs, web apps</span>
-          </div>
-        </article>
-        <article>
-          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tensorflow/tensorflow-original.svg" alt="TensorFlow logo" loading="lazy">
-          <div>
-            <strong>AI & Data Science</strong>
-            <span>Models, analysis, notebooks</span>
-          </div>
-        </article>
-      </div>
+    <div class="loading-state" *ngIf="loading">
+      <mat-spinner diameter="42"></mat-spinner>
+      <p>Loading courses...</p>
     </div>
-  </div>
-</section>
 
-<section class="course-tracks">
-  <div class="section-heading">
-    <span class="eyebrow">Explore courses</span>
-    <h2>Focused tracks for practical software learning</h2>
-    <p>Pick a course category, preview details, and enroll only when it matches your learning goal.</p>
-  </div>
+    <div class="empty-state" *ngIf="!loading && error">
+      <p>{{error}}</p>
+    </div>
 
-  <div class="tracks-grid">
-    <article class="track-card vm-card-lift">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg" alt="Java logo" loading="lazy">
-      <h3>Java Full Stack</h3>
-      <p>Core Java, Spring Boot, Angular, REST APIs, database design, and full application development.</p>
-      <a routerLink="/courses">View Courses</a>
-    </article>
-    <article class="track-card vm-card-lift">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg" alt="Python logo" loading="lazy">
-      <h3>Python Full Stack</h3>
-      <p>Python fundamentals, Django or Flask, web development, APIs, and deployment basics.</p>
-      <a routerLink="/courses">View Courses</a>
-    </article>
-    <article class="track-card vm-card-lift">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" alt="React logo" loading="lazy">
-      <h3>Web Development</h3>
-      <p>HTML, CSS, JavaScript, React, Angular, responsive UI, and modern frontend workflows.</p>
-      <a routerLink="/courses">View Courses</a>
-    </article>
-    <article class="track-card vm-card-lift">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tensorflow/tensorflow-original.svg" alt="TensorFlow logo" loading="lazy">
-      <h3>AI & Data Science</h3>
-      <p>Python data tools, machine learning, analytics, visualization, and model fundamentals.</p>
-      <a routerLink="/courses">View Courses</a>
-    </article>
-  </div>
-</section>
+    <div class="course-slider" *ngIf="!loading && !error && courses.length">
+      <button type="button" class="slider-btn left" aria-label="Previous courses" (click)="scrollCourses('left')">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
 
-<section class="learning-flow">
-  <div class="section-heading">
-    <span class="eyebrow">How it works</span>
-    <h2>A simple flow from browsing to learning</h2>
-  </div>
-  <div class="flow-grid">
-    <article>
-      <span>1</span>
-      <h3>Browse</h3>
-      <p>Compare available courses, language, duration, trainer details, and learning outcomes.</p>
-    </article>
-    <article>
-      <span>2</span>
-      <h3>Preview</h3>
-      <p>Open a course preview to understand what you will learn before creating an account.</p>
-    </article>
-    <article>
-      <span>3</span>
-      <h3>Enroll</h3>
-      <p>Sign up, complete checkout where required, and unlock the course inside your dashboard.</p>
-    </article>
-    <article>
-      <span>4</span>
-      <h3>Learn</h3>
-      <p>Continue lessons, track progress, and revisit course material whenever you need.</p>
-    </article>
-  </div>
-</section>
-
-<section class="feature-section">
-  <div class="feature-copy">
-    <span class="eyebrow">Learning experience</span>
-    <h2>Clean course access for everyday learners</h2>
-    <p>The application stays focused on courses, course previews, secure accounts, payment checkout, and the learner dashboard.</p>
-  </div>
-  <div class="feature-list">
-    <article>
-      <mat-icon>play_circle</mat-icon>
-      <div>
-        <h3>Structured course videos</h3>
-        <p>Lessons are organized so learners can continue without searching through unrelated content.</p>
+      <div class="course-rail" #courseRail>
+        <article class="course-card" *ngFor="let course of courses; let index = index" [ngClass]="getCourseTheme(course)" (click)="viewCourse(course.id)">
+          <div class="course-media">
+            <img [src]="getCourseImage(course)" [alt]="course.title + ' course image'" loading="lazy">
+            <b>{{index + 1 < 10 ? '0' + (index + 1) : index + 1}}</b>
+          </div>
+          <div class="course-content">
+            <span>{{getCategoryName(course.categoryId)}}</span>
+            <h3>{{course.title}}</h3>
+            <p>{{course.description | slice:0:130}}{{course.description.length > 130 ? '...' : ''}}</p>
+            <div class="course-meta">
+              <small>{{course.difficulty}}</small>
+              <small>{{course.language}}</small>
+            </div>
+          </div>
+        </article>
       </div>
-    </article>
-    <article>
-      <mat-icon>verified_user</mat-icon>
-      <div>
-        <h3>Secure learner accounts</h3>
-        <p>Users sign in, manage their profile, and access enrolled courses from one place.</p>
-      </div>
-    </article>
-    <article>
-      <mat-icon>insights</mat-icon>
-      <div>
-        <h3>Progress-friendly dashboard</h3>
-        <p>The dashboard keeps learning activity and course access easy to scan.</p>
-      </div>
-    </article>
-  </div>
-</section>
 
-<section class="faq-section">
-  <div class="section-heading">
-    <span class="eyebrow">Questions</span>
-    <h2>Course platform basics</h2>
-  </div>
-  <div class="faq-grid">
-    <article class="vm-card-lift">
-      <h3>Can I preview a course before enrolling?</h3>
-      <p>Yes. Course preview pages show important details before you decide to sign up or continue.</p>
-    </article>
-    <article class="vm-card-lift">
-      <h3>Where do enrolled courses appear?</h3>
-      <p>After signing in, enrolled courses are available from the learner dashboard.</p>
-    </article>
-    <article class="vm-card-lift">
-      <h3>Which course tracks are available?</h3>
-      <p>The catalog can include Java, Python, AI, data science, web development, SAP, Tally, and other software courses added by the admin.</p>
-    </article>
-  </div>
+      <button type="button" class="slider-btn right" aria-label="Next courses" (click)="scrollCourses('right')">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+  </section>
 </section>
